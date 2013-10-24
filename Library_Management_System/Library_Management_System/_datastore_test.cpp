@@ -14,7 +14,10 @@ int main() {
 	//Book* book = Select<Book>(1);
 	//Traverse<Book>(test);
 	//int a = Test(new User());
-	auto book = Create<Book>();
+	//auto book = Create<Book>();
+	//cout << _GenerateFilePathByType<Book>() << endl;
+	//_OpenFile<Book>();
+	Init();
 	return 0;
 }
 

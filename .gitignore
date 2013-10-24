@@ -154,3 +154,5 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
+
+Library_Management_System/Library_Management_System/Datastore/
