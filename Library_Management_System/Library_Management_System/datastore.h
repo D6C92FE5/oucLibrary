@@ -35,11 +35,12 @@ namespace Datastore {
 	struct Record
 	{
 		int Index;
-		bool IsDeleted;
+		bool IsDeleted_; // ÔÝ¶¨²»ÔÊÐíÉ¾³ý
 		int BookIndex;
 		int UserIndex;
 		int Datetime;
 		bool IsRenew;
+		bool IsReturned;
 	};
 
 	template <typename T>
