@@ -14,18 +14,19 @@ namespace Datastore {
 	struct Book
 	{
 		int Index;
+		bool IsDeleted;
 		char Isbn[13];
 		char Name[100];
 		char Author[100];
 		char Pulisher[100];
 		int Total;
 		int Remain;
-		bool IsDeleted;
 	};
 
 	struct User
 	{
 		int Index;
+		bool IsDeleted;
 		char Name[100];
 		char Password[40];
 		char Type[10];
@@ -34,6 +35,7 @@ namespace Datastore {
 	struct Record
 	{
 		int Index;
+		bool IsDeleted;
 		int BookIndex;
 		int UserIndex;
 		int Datetime;
@@ -64,9 +66,9 @@ namespace Datastore {
 
 	template <typename T>
 	FILE* _OpenFile() {
-		FILE *file = fopen(_GenerateFilePathByType<T>(), "wb+");
-		if (file == null) {
-			throw new exception("文件打开失败")
+		FILE *file = fopen(_GenerateFilePathByType<T>(), "ab+");
+		if (file == NULL) {
+			throw new exception("文件打开失败");
 		}
 		return file;
 	}
@@ -109,12 +111,30 @@ namespace Datastore {
 
 	template <typename T>
 	void InsertOrUpdate(T* item) {
-		;
+		auto file = _OpenFile<T>();
+		auto size = sizeof T;
+		if (item->Index == -1) {
+			fseek(file, 0, SEEK_END);
+			
+		} else {
+			auto offset = fseek(file, size * item->Index, SEEK_SET);
+			item->Index = offset / size + 1;
+		}
+		fwrite(item, size, 1, file);
+		fclose(file);
 	}
 
 	template <typename T>
 	void Delete(const int index) {
-		;
+		auto file = _OpenFile<T>();
+		auto size = sizeof T;
+		T* item = new T();
+		fseek(file, size * index, SEEK_SET);
+		fread(item, size, 1, file);
+		item->IsDeleted = true;
+		fseek(file, size * index, SEEK_SET);
+		fwrite(item, size, 1, file);
+		fclose(file);
 	}
 
 	template <typename T>
