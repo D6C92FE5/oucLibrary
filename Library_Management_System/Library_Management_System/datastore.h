@@ -77,8 +77,9 @@ namespace Datastore {
 		auto exist = true;
 		if (file == NULL) {
 			exist = false;
+		} else {
+			fclose(file);
 		}
-		fclose(file);
 		return exist;
 	}
 
