@@ -23,7 +23,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="_datastore_test.cpp">
+    <ClCompile Include="_datastore_example.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="datastore.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

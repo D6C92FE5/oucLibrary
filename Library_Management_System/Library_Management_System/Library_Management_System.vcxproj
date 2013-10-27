@@ -82,7 +82,8 @@
     <ClInclude Include="datastore.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="_datastore_test.cpp" />
+    <ClCompile Include="datastore.cpp" />
+    <ClCompile Include="_datastore_example.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
