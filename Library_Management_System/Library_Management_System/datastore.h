@@ -32,6 +32,7 @@ namespace Datastore {
         char Name[100];
         char Password[40];
         char Type[10];
+        char Info[100];
     };
 
     struct Record
