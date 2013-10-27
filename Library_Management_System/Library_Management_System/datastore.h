@@ -105,7 +105,7 @@ namespace Datastore {
     }
 
     template <typename T>
-    T** Select(const std::function<bool(const T*)> where, int beginIndex = 0, int maxCount = 0) {
+    T** Select(const std::function<bool(const T*)> where, int beginIndex = 0, int maxCount = -1) {
         auto temp = std::list<T*>();
         auto count = 0;
         Traverse<T>([&](const T* item) {
@@ -132,11 +132,11 @@ namespace Datastore {
         auto file = _OpenFile<T>();
         auto size = sizeof T;
         if (item->Index == -1) {
-            fseek(file, 0, SEEK_END);            
-        } else {
             fseek(file, size * item->Index, SEEK_SET);
             auto offset = ftell(file);
             item->Index = offset / size + 1;
+        } else {
+            fseek(file, 0, SEEK_END);            
         }
         fwrite(item, size, 1, file);
         fclose(file);
@@ -166,7 +166,7 @@ namespace Datastore {
         auto count = ftell(file) / size;
 
         if (endIndex <= 0) {
-            endIndex += size;
+            endIndex += count;
         }
 
         fseek(file, beginIndex * size, SEEK_SET);        

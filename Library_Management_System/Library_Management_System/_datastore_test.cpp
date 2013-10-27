@@ -11,8 +11,7 @@ bool test(const Book* book) {
 }
 
 bool where(const User* user) {
-    std::cout << user->Name << std::endl;
-    return true;
+    return strcmp(user->Type, "”√ªß") == 0;
 }
 
 int main() {
@@ -22,8 +21,7 @@ int main() {
     //auto book = Create<Book>();
     //cout << _GenerateFilePathByType<Book>() << endl;
     //_OpenFile<Book>();
-    //Init();
-    Select<User>(where);
+    Init();
+    auto users = Select<User>(where);
     return 0;
 }
-
