@@ -119,12 +119,13 @@ namespace Datastore {
             return count != maxCount;
         }, beginIndex);
 
-        auto result = new T*[temp.size()];
+        auto result = new T*[temp.size() + 1];
         int i = 0;
         for (auto it=temp.begin(); it != temp.end(); it++) {
             result[i] = *it;
             i++;
         }
+        result[temp.size()] = NULL;
         return result;
     }
 
