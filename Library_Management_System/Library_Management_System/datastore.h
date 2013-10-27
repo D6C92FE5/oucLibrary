@@ -4,7 +4,9 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <functional>
 #include <string>
+#include <list>
 #include <direct.h>
 
 namespace Datastore {
@@ -69,7 +71,7 @@ namespace Datastore {
 	FILE* _OpenFile() {
 		FILE *file = fopen(_GenerateFilePathByType<T>(), "ab+");
 		if (file == NULL) {
-			throw new exception("文件打开失败");
+			throw new std::exception("文件打开失败");
 		}
 		return file;
 	}
@@ -95,19 +97,36 @@ namespace Datastore {
 	}
 
 	template <typename T>
-	T* Select(const int index) {
+	T* Select(int index) {
 		auto file = _OpenFile<T>();
 		auto size = sizeof T;
-		fseek(file, size * index, SEEK_SET);
 		auto item = new T();
+		fseek(file, size * index, SEEK_SET);
 		fread(item, size, 1, file);
 		return item;
 	}
 
 	template <typename T>
-	T** Select(bool(*where)(T*), const int beginIndex = 0, const int maxCount = 0) {
-		auto array = new T[10];
-		return array;
+	T** Select(const std::function<bool(const T*)> where, int beginIndex = 0, int maxCount = 0) {
+		auto temp = std::list<T*>();
+		auto count = 0;
+		Traverse<T>([&](const T* item) {
+			if (where(item)) {
+				T* t = new T();
+				memcpy(t, item, sizeof T);
+				temp.push_back(t);
+				count++;
+			}
+			return count != maxCount;
+		}, beginIndex);
+
+		auto result = new T*[temp.size()];
+		int i = 0;
+		for (auto it=temp.begin(); it != temp.end(); it++) {
+			result[i] = *it;
+			i++;
+		}
+		return result;
 	}
 
 	template <typename T>
@@ -115,10 +134,10 @@ namespace Datastore {
 		auto file = _OpenFile<T>();
 		auto size = sizeof T;
 		if (item->Index == -1) {
-			fseek(file, 0, SEEK_END);
-			
+			fseek(file, 0, SEEK_END);			
 		} else {
-			auto offset = fseek(file, size * item->Index, SEEK_SET);
+			fseek(file, size * item->Index, SEEK_SET);
+			auto offset = ftell(file);
 			item->Index = offset / size + 1;
 		}
 		fwrite(item, size, 1, file);
@@ -126,7 +145,7 @@ namespace Datastore {
 	}
 
 	template <typename T>
-	void Delete(const int index) {
+	void Delete(int index) {
 		auto file = _OpenFile<T>();
 		auto size = sizeof T;
 		T* item = new T();
@@ -135,14 +154,32 @@ namespace Datastore {
 		item->IsDeleted = true;
 		fseek(file, size * index, SEEK_SET);
 		fwrite(item, size, 1, file);
+		delete item;
 		fclose(file);
 	}
 
 	template <typename T>
-	void Traverse(bool(*func)(T*), const int beginIndex = 0, const int endIndex = 0) {
+	void Traverse(const std::function<bool(const T*)> func, int beginIndex = 0, int endIndex = 0) {
+		auto file = _OpenFile<T>();
+		auto size = sizeof T;
+		T* item = new T();
+
+		fseek(file, 0, SEEK_END);
+		auto count = ftell(file) / size;
+
 		if (endIndex <= 0) {
-			;
+			endIndex += size;
 		}
+
+		fseek(file, beginIndex * size, SEEK_SET);		
+		for (auto i = beginIndex; i < endIndex; i++) {
+			fread(item, size, 1, file);
+			if (!func(item)) {
+				break;
+			}
+		}
+
+		delete item;
 	}
 
 	void Init(bool force = false) {

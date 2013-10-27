@@ -1,12 +1,17 @@
 
 #include <iostream>
-using namespace std;
+//using namespace std;
 
 #include "datastore.h"
 using namespace Datastore;
 
-bool test(Book* book) {
-	cout << book->Name << endl;
+bool test(const Book* book) {
+	std::cout << book->Name << std::endl;
+	return true;
+}
+
+bool where(const User* user) {
+	std::cout << user->Name << std::endl;
 	return true;
 }
 
@@ -17,7 +22,8 @@ int main() {
 	//auto book = Create<Book>();
 	//cout << _GenerateFilePathByType<Book>() << endl;
 	//_OpenFile<Book>();
-	Init();
+	//Init();
+	Select<User>(where);
 	return 0;
 }
 
