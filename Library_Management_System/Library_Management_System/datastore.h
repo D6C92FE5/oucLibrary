@@ -68,7 +68,7 @@ namespace Datastore {
 
     template <typename T>
     FILE* _OpenFile() {
-        FILE *file = fopen(_GenerateFilePathByType<T>(), "ab+");
+        FILE *file = fopen(_GenerateFilePathByType<T>(), "rb+");
         if (file == NULL) {
             throw new std::exception("文件打开失败");
         }
@@ -133,11 +133,11 @@ namespace Datastore {
         auto file = _OpenFile<T>();
         auto size = sizeof T;
         if (item->Index == -1) {
-            fseek(file, size * item->Index, SEEK_SET);
-            auto offset = ftell(file);
-            item->Index = offset / size + 1;
-        } else {
             fseek(file, 0, SEEK_END);            
+            auto offset = ftell(file);
+            item->Index = offset / size;
+        } else {
+            fseek(file, size * item->Index, SEEK_SET);
         }
         fwrite(item, size, 1, file);
         fclose(file);
