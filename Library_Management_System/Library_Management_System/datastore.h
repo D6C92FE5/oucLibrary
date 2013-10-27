@@ -17,7 +17,7 @@ namespace Datastore {
     {
         int Index;
         bool IsDeleted;
-        char Isbn[13];
+        char Isbn[14];
         char Name[100];
         char Author[100];
         char Pulisher[100];

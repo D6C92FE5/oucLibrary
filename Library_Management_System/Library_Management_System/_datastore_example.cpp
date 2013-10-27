@@ -12,6 +12,7 @@ void InsertBook() {
     strcpy(book->Name, "C++ Primer中文版(第5版)");
     strcpy(book->Isbn, "9787121155352");
     strcpy(book->Author, "Stanley B. Lippman, Josee Lajoie, Barbara E. Moo");
+    strcpy(book->Pulisher, "电子工业出版社");
     book->Total = 10;
     book->Remain = 10;
     Datastore::InsertOrUpdate(book);
