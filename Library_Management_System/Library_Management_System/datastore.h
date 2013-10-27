@@ -57,9 +57,7 @@ namespace Datastore {
         strcpy(filepath + lengthPath, name);
 
         for (auto i = lengthPath; i < lengthPath + lengthName; i++) {
-            auto t = filepath[i];
-            if (t == ' ' || t == '/' || t == ':' || t == '*' || t == '?' || 
-                t == '"' || t == '<' || t == '>' || t == '|' || t == '\\') {
+            if (strchr("\\/:*?\"<>| ", filepath[i]) != NULL) {
                 filepath[i] = '_';
             }
         }
