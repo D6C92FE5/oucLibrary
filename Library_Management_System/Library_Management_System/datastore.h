@@ -11,8 +11,10 @@
 
 namespace Datastore {
 
+    // 数据存储的文件所在的目录
     extern const char* _PATH;
     
+    // 图书信息实体
     struct Book
     {
         int Index;
@@ -25,6 +27,7 @@ namespace Datastore {
         int Remain;
     };
 
+    // 用户实体
     struct User
     {
         int Index;
@@ -35,6 +38,7 @@ namespace Datastore {
         char Info[100];
     };
 
+    // 借阅记录实体
     struct Record
     {
         int Index;
@@ -46,6 +50,7 @@ namespace Datastore {
         bool IsReturned;
     };
 
+    // 根据实体类型生成文件名
     template <typename T>
     char* _GenerateFilePathByType() {
         auto name = typeid(T).name();
@@ -66,6 +71,7 @@ namespace Datastore {
         return filepath;
     }
 
+    // 打开存储某种类型的实体的文件
     template <typename T>
     FILE* _OpenFile() {
         FILE *file = fopen(_GenerateFilePathByType<T>(), "rb+");
@@ -75,6 +81,7 @@ namespace Datastore {
         return file;
     }
 
+    // 检测存储某种类型的实体的文件是否存在
     template <typename T>
     bool _IsFileExist() {
         auto file = fopen(_GenerateFilePathByType<T>(), "rb");
@@ -87,6 +94,7 @@ namespace Datastore {
         return exist;
     }
 
+    // 创建某种实体
     template <typename T>
     T* Create() {
         auto item = new T();
@@ -95,6 +103,7 @@ namespace Datastore {
         return item;
     }
 
+    // 根据 Index 选择某个实体
     template <typename T>
     T* Select(int index) {
         auto file = _OpenFile<T>();
@@ -105,6 +114,9 @@ namespace Datastore {
         return item;
     }
 
+    // 根据条件选择一些实体
+    // 返回 NULL 结尾的数组
+    // where: 搜索条件
     template <typename T>
     T** Select(const std::function<bool(const T*)> where, int beginIndex = 0, int maxCount = -1) {
         auto temp = std::list<T*>();
@@ -129,6 +141,7 @@ namespace Datastore {
         return result;
     }
 
+    // 插入或更新一个实体
     template <typename T>
     void InsertOrUpdate(T* item) {
         auto file = _OpenFile<T>();
@@ -144,6 +157,7 @@ namespace Datastore {
         fclose(file);
     }
 
+    // 删除一个实体
     template <typename T>
     void Delete(int index) {
         auto file = _OpenFile<T>();
@@ -158,6 +172,8 @@ namespace Datastore {
         fclose(file);
     }
 
+    // 遍历一种实体
+    // func: 操作一个实体的函数
     template <typename T>
     void Traverse(const std::function<bool(const T*)> func, int beginIndex = 0, int endIndex = 0) {
         auto file = _OpenFile<T>();
@@ -182,6 +198,8 @@ namespace Datastore {
         delete item;
     }
 
+    // 数据存储初始化，创建相关目录和文件并添加初始信息
+    // force: 为 true 时忽略现有文件强制初始化
     void Init(bool force = false);
 
 }
