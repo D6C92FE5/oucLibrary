@@ -42,7 +42,7 @@ namespace Datastore {
     struct Record
     {
         int Index;
-        bool IsDeleted_; // ÔÝ¶¨²»ÔÊÐíÉ¾³ý
+        bool IsDeleted;
         int BookIndex;
         int UserIndex;
         int Datetime;
@@ -190,7 +190,7 @@ namespace Datastore {
         fseek(file, beginIndex * size, SEEK_SET);        
         for (auto i = beginIndex; i < endIndex; i++) {
             fread(item, size, 1, file);
-            if (!func(item)) {
+            if (!item->IsDeleted && !func(item)) {
                 break;
             }
         }
