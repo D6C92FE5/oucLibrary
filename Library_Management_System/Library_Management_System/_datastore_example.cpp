@@ -79,7 +79,7 @@ void InsertRecord() {
 }
 
 // ×¢Òâ³õÊ¼»¯
-int main() {
+int main_() {
     Datastore::Init();
     InsertBook();
     UpdateBook();
