@@ -45,7 +45,7 @@ namespace Datastore {
         bool IsDeleted;
         int BookIndex;
         int UserIndex;
-        int Datetime;
+        time_t Datetime;
         bool IsRenew;
         bool IsReturned;
     };
