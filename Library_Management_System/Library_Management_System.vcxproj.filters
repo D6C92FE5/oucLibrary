@@ -21,12 +21,18 @@
     <ClInclude Include="datastore.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="constant.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="_datastore_example.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="datastore.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="constant.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

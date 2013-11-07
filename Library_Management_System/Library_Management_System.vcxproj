@@ -23,7 +23,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>Visual Studio 2012 (v110)</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug13|Win32'" Label="Configuration">
@@ -108,9 +108,11 @@
     <Text Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="constant.h" />
     <ClInclude Include="datastore.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="constant.cpp" />
     <ClCompile Include="datastore.cpp" />
     <ClCompile Include="_datastore_example.cpp" />
   </ItemGroup>
