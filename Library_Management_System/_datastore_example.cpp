@@ -5,7 +5,6 @@
 using namespace std;
 
 #include "datastore.h"
-#include "constant.h"
 
 // 添加一种图书
 void InsertBook() {
@@ -82,7 +81,6 @@ void InsertRecord() {
 // 注意初始化
 int main_() {
     Datastore::Init();
-	Constant::Init();
     InsertBook();
     UpdateBook();
     DeleteBook();

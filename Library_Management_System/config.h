@@ -1,12 +1,12 @@
 #pragma once
-namespace Config
-{
+namespace Config {
+
 	//用户类型
-	const bool ADMIN_USER = true;
-	const bool NORMAL_USER = false;
+	extern const bool ADMIN_USER;
+	extern const bool NORMAL_USER;
 
 	//用户权限
-	struct USER_ACCESS{
+	typedef struct {
 		bool SEARCH_BOOK;		///检索图书
 		bool CHANGE_PASSWORD;	///修改密码
 		bool ADD_USER;			///添加用户
@@ -16,13 +16,13 @@ namespace Config
 		bool RETURN_BOOK;		///归还图书
 		bool RENEW_BOOK;		///续借图书
 		bool BOLLOW_HISTORY;	///查看借阅历史
-	}ADMIN_ACCESS, NORMAL_ACCESS;
+	} USER_ACCESS;
+    extern const USER_ACCESS ADMIN_ACCESS;
+    extern const USER_ACCESS NORMAL_ACCESS;
 
 	//借阅期限
-	const int MAX_BOLLOW_TIME = 30;
+	extern const int MAX_BOLLOW_TIME;
 
 	//借阅上限
-	const int MAX_BOLLOW_NUM = 5;
-
-	void Init();
+	extern const int MAX_BOLLOW_NUM;
 }
