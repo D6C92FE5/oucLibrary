@@ -11,9 +11,6 @@
 
 namespace Datastore {
 
-    // 数据存储的文件所在的目录
-    extern const char* _PATH;
-    
     // 图书信息实体
     struct Book
     {
@@ -51,24 +48,11 @@ namespace Datastore {
     };
 
     // 根据实体类型生成文件名
+    char* _GenerateFilePathByTypeName(const char* name);
     template <typename T>
     char* _GenerateFilePathByType() {
         auto name = typeid(T).name();
-
-        auto lengthName = strlen(name);
-        auto lengthPath = strlen(_PATH);
-        auto filepath = new char[lengthPath + lengthName + 1];
-
-        strcpy(filepath, _PATH);
-        strcpy(filepath + lengthPath, name);
-
-        for (auto i = lengthPath; i < lengthPath + lengthName; i++) {
-            if (strchr("\\/:*?\"<>| ", filepath[i]) != NULL) {
-                filepath[i] = '_';
-            }
-        }
-
-        return filepath;
+        return _GenerateFilePathByTypeName(name);
     }
 
     // 打开存储某种类型的实体的文件

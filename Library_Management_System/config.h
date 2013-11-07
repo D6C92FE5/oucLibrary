@@ -25,4 +25,7 @@ namespace Config {
 
     //借阅上限
     extern const int MAX_BOLLOW_NUM;
+
+    //数据存储文件所在的目录
+    extern const char* DATASTORE_PATH;
 }

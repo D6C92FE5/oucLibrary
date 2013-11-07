@@ -31,4 +31,6 @@ namespace Config {
 
     const int MAX_BOLLOW_TIME = 30;
     const int MAX_BOLLOW_NUM = 5;
+
+    const char* DATASTORE_PATH = ".\\Datastore\\";
 }
