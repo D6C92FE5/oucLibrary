@@ -6,7 +6,7 @@ namespace Config {
     extern const bool NORMAL_USER;
 
     //用户权限
-    typedef struct {
+    struct USER_ACCESS {
         bool SEARCH_BOOK;       ///检索图书
         bool CHANGE_PASSWORD;   ///修改密码
         bool ADD_USER;          ///添加用户
@@ -16,7 +16,7 @@ namespace Config {
         bool RETURN_BOOK;       ///归还图书
         bool RENEW_BOOK;        ///续借图书
         bool BOLLOW_HISTORY;    ///查看借阅历史
-    } USER_ACCESS;
+    };
     extern const USER_ACCESS ADMIN_ACCESS;
     extern const USER_ACCESS NORMAL_ACCESS;
 
