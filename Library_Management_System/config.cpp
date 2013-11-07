@@ -1,6 +1,6 @@
-#include "constant.h"
+#include "config.h"
 
-namespace Constant
+namespace Config
 {
 	void Init(){
 		ADMIN_ACCESS.ADD_USER = true;

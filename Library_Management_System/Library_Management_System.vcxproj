@@ -108,11 +108,11 @@
     <Text Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="constant.h" />
+    <ClInclude Include="config.h" />
     <ClInclude Include="datastore.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="constant.cpp" />
+    <ClCompile Include="config.cpp" />
     <ClCompile Include="datastore.cpp" />
     <ClCompile Include="_datastore_example.cpp" />
   </ItemGroup>

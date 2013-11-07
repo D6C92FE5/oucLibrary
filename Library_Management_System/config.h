@@ -1,5 +1,5 @@
 #pragma once
-namespace Constant
+namespace Config
 {
 	//用户类型
 	const bool ADMIN_USER = true;
