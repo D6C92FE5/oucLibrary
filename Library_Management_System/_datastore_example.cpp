@@ -48,16 +48,24 @@ bool SearchBookCondition(const Datastore::Book* book) {
     return book->Remain > 0;
 }
 void SearchBook() {
-    auto books = Datastore::Select<Datastore::Book>(SearchBookCondition);
+    auto books = Datastore::Selects<Datastore::Book>(SearchBookCondition);
     DestroyArray(books);
 }
 
 // 根据条件搜索图书 第2种写法
 void SearchBook2() {
-    auto books = Datastore::Select<Datastore::Book>([](const Datastore::Book* book) {
+    auto books = Datastore::Selects<Datastore::Book>([](const Datastore::Book* book) {
         return book->Remain > 0;
     });
     DestroyArray(books);
+}
+
+// 根据条件搜索符合条件的第一本图书 第2种写法
+void SearchABook2() {
+    auto book = Datastore::Select<Datastore::Book>([](const Datastore::Book* book) {
+        return strcmp(book->Isbn, "9787121155352") == 0;
+    });
+    delete book;
 }
 
 // 修改用户
@@ -86,6 +94,7 @@ int main() {
     DeleteBook();
     SearchBook();
     SearchBook2();
+    SearchABook2();
     UpdateUser();
     InsertRecord();
     return 0;

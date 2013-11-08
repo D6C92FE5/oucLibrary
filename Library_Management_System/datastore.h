@@ -103,7 +103,7 @@ namespace Datastore {
     // 返回 NULL 结尾的数组
     // where: 搜索条件
     template <typename T>
-    T** Select(const std::function<bool(const T*)> where, int beginIndex = 0, int maxCount = -1) {
+    T** Selects(const std::function<bool(const T*)> where, int beginIndex = 0, int maxCount = -1) {
         auto temp = std::list<T*>();
         auto count = 0;
         Traverse<T>([&](const T* item) {
@@ -123,6 +123,17 @@ namespace Datastore {
             i++;
         }
         result[temp.size()] = NULL;
+        return result;
+    }
+
+    // 根据条件选择一个实体
+    // 返回符合条件的第一个实体，没有找到时返回 NULL
+    // where: 搜索条件
+    template <typename T>
+    T* Select(const std::function<bool(const T*)> where, int beginIndex = 0) {
+        auto results = Selects(where, beginIndex, 1);
+        auto result = *results;
+        delete results;
         return result;
     }
 
