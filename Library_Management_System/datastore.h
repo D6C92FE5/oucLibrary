@@ -8,6 +8,8 @@
 #include <list>
 #include <direct.h>
 
+#include "config.h"
+
 namespace Datastore {
 
     // 图书信息实体
@@ -15,10 +17,10 @@ namespace Datastore {
     {
         int Index;
         bool IsDeleted;
-        char Isbn[14];
-        char Name[100];
-        char Author[100];
-        char Pulisher[100];
+        char Isbn[LEN_BOOK_ISBN];
+        char Name[LEN_BOOK_NAME];
+        char Author[LEN_BOOK_AUTHOR];
+        char Publisher[LEN_BOOK_PUBLISHER];
         int Total;
         int Remain;
     };
@@ -28,10 +30,10 @@ namespace Datastore {
     {
         int Index;
         bool IsDeleted;
-        char Name[100];
-        char Password[40];
-        char Type[10];
-        char Info[100];
+        char Name[LEN_USER_NAME];
+        char Password[LEN_USER_PASSWORD];
+        char Type[LEN_USER_TYPE];
+        char Info[LEN_USER_INFO];
     };
 
     // 借阅记录实体

@@ -2,6 +2,16 @@
 
 namespace Config {
 
+    //数据实体属性长度，注意 extern const 不能作为数组长度
+    #define LEN_BOOK_ISBN 14
+    #define LEN_BOOK_NAME 100
+    #define LEN_BOOK_AUTHOR 100
+    #define LEN_BOOK_PUBLISHER 100
+    #define LEN_USER_NAME 100
+    #define LEN_USER_PASSWORD 40
+    #define LEN_USER_TYPE 10
+    #define LEN_USER_INFO 100
+    
     //用户类型
     extern const bool ADMIN_USER;
     extern const bool NORMAL_USER;
