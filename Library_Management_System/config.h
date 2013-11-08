@@ -1,4 +1,5 @@
 #pragma once
+
 namespace Config {
 
     //用户类型

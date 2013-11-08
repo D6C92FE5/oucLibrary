@@ -1,5 +1,4 @@
-#ifndef _DATASTORE_H_
-#define _DATASTORE_H_
+#pragma once
 
 #include <cstdio>
 #include <cstdlib>
@@ -187,5 +186,3 @@ namespace Datastore {
     void Init(bool force = false);
 
 }
-
-#endif // _DATASTORE_H_
