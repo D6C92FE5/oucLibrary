@@ -18,10 +18,13 @@
     <Text Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="datastore.h">
+    <ClInclude Include="UserManager.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="config.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="datastore.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -30,6 +33,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="datastore.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="UserManager.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="config.cpp">
