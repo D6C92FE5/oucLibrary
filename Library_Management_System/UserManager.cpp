@@ -5,6 +5,7 @@
 #include <cstdlib>
 using namespace std;
 #include "UserManager.h"
+#include "datastore.h"
 extern string Type;
 extern Datastore::User * IUser;
 //Î¬»¤
@@ -12,19 +13,24 @@ namespace UserManager
 {
 	bool Login(string Name, string Password)
 	{
-		auto user=Datastore::Select<Datastore::User>(UserManager::SearchUserName);
+		char name[LEN_USER_NAME];
+		for (int i = 0; Name[i] != 0; i++){ name[i] = Name[i]; }
+		strcpy(IUser->Name, name);
+		auto user = Datastore::Select<Datastore::User>([Name](const Datastore::User* user) {
+			return user->Name==Name;
+		});
 		//if (User[1] != NULL) return false;
 		if (user->Name == Name && user->Password == Password){
 			Type = user->Type;
 			IUser->Index = user->Index;
 			IUser->IsDeleted = user->IsDeleted;
 			strcpy(IUser->Info, user->Info);
-			strcpy(IUser->Name, user->Name);
 			strcpy(IUser->Password, user->Password);
 			strcpy(IUser->Type, user->Type);
 			delete user;
 			return true;
 		}
+		else strcpy(IUser->Name, "");
 		delete user;
 		return false;
 	}
@@ -37,7 +43,7 @@ namespace UserManager
 	}
 
 
-	Datastore::User * InsertUser(string Name, string Password)
+	void InsertUser(string Name, string Password)
 	{
 		auto user = Datastore::Create<Datastore::User>();
 		char name[LEN_USER_NAME];
@@ -56,12 +62,16 @@ namespace UserManager
 	}
 	Datastore::User * SelectUser(string Name)
 	{
-		auto user = Datastore::Select<Datastore::User>(SearchUserName);
+		auto user = Datastore::Select<Datastore::User>([Name](const Datastore::User* user) {
+			return user->Name == Name;
+		});
 		return user;
 	}
 	void DeleteUser(string Name)
 	{
-		auto user = Datastore::Select<Datastore::User>(SearchUserName);
+		auto user = Datastore::Select<Datastore::User>([Name](const Datastore::User* user) {
+			return user->Name == Name;
+		});
 		Datastore::Delete<Datastore::User>(user->Index);
 		delete user;
 	}
@@ -69,7 +79,9 @@ namespace UserManager
 	{
 		if (Password == "")return;
 		else {
-			auto user = Datastore::Select<Datastore::User>(SearchUserName);
+			auto user = Datastore::Select<Datastore::User>([Name](const Datastore::User* user) {
+				return user->Name == Name;
+			});
 			user->Password == Password;
 			Datastore::InsertOrUpdate(user);
 			delete user;
@@ -79,7 +91,9 @@ namespace UserManager
 	{
 		if (Info == "")return;
 		else {
-			auto user = Datastore::Select<Datastore::User>(SearchUserName);
+			auto user = Datastore::Select<Datastore::User>([Name](const Datastore::User* user) {
+				return user->Name == Name;
+			});
 			user->Info == Info;
 			Datastore::InsertOrUpdate(user);
 			delete user;
