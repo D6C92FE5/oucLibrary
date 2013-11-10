@@ -109,9 +109,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="datastore.h" />
+    <ClInclude Include="UserManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="datastore.cpp" />
+    <ClCompile Include="UserManager.cpp" />
     <ClCompile Include="_datastore_example.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
