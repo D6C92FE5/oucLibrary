@@ -12,20 +12,20 @@ namespace UserManager
 {
 	bool Login(string Name, string Password)
 	{
-		auto User=Datastore::Select<Datastore::User>(UserManager::SearchUserName);
+		auto user=Datastore::Select<Datastore::User>(UserManager::SearchUserName);
 		//if (User[1] != NULL) return false;
-		if (User->Name == Name && User->Password == Password){
-			Type = User->Type;
-			IUser->Index = User->Index;
-			IUser->IsDeleted = User->IsDeleted;
-			strcpy(IUser->Info, User->Info);
-			strcpy(IUser->Name, User->Name);
-			strcpy(IUser->Password, User->Password);
-			strcpy(IUser->Type, User->Type);
-			delete User;
+		if (user->Name == Name && user->Password == Password){
+			Type = user->Type;
+			IUser->Index = user->Index;
+			IUser->IsDeleted = user->IsDeleted;
+			strcpy(IUser->Info, user->Info);
+			strcpy(IUser->Name, user->Name);
+			strcpy(IUser->Password, user->Password);
+			strcpy(IUser->Type, user->Type);
+			delete user;
 			return true;
 		}
-		delete User;
+		delete user;
 		return false;
 	}
 
@@ -54,15 +54,33 @@ namespace UserManager
 	}
 	Datastore::User * SelectUser(string Name)
 	{
-		;
+		auto user = Datastore::Select<Datastore::User>(SearchUserName);
+		return user;
 	}
 	void DeleteUser(string Name)
 	{
-		;
+		auto user = Datastore::Select<Datastore::User>(SearchUserName);
+		Datastore::Delete<Datastore::User>(user->Index);
+		delete user;
 	}
-	void UpdataUser(string Name)
+	void UpdataUserPassword(string Name, string Password = "")
 	{
-		;
+		if (Password == "")return;
+		else {
+			auto user = Datastore::Select<Datastore::User>(SearchUserName);
+			user->Password == Password;
+			Datastore::InsertOrUpdate(user);
+			delete user;
+		}
 	}
-
+	void UpdataUserInfo(string Name, string Info = "")
+	{
+		if (Info == "")return;
+		else {
+			auto user = Datastore::Select<Datastore::User>(SearchUserName);
+			user->Info == Info;
+			Datastore::InsertOrUpdate(user);
+			delete user;
+		}
+	}
 }
