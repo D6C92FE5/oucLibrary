@@ -12,7 +12,7 @@ void InsertBook() {
     strcpy(book->Name, "C++ Primer中文版(第5版)");
     strcpy(book->Isbn, "9787121155352");
     strcpy(book->Author, "Stanley B. Lippman, Josee Lajoie, Barbara E. Moo");
-    strcpy(book->Pulisher, "电子工业出版社");
+    strcpy(book->Publisher, "电子工业出版社");
     book->Total = 10;
     book->Remain = 10;
     Datastore::InsertOrUpdate(book);
@@ -48,16 +48,24 @@ bool SearchBookCondition(const Datastore::Book* book) {
     return book->Remain > 0;
 }
 void SearchBook() {
-    auto books = Datastore::Select<Datastore::Book>(SearchBookCondition);
+    auto books = Datastore::Selects<Datastore::Book>(SearchBookCondition);
     DestroyArray(books);
 }
 
 // 根据条件搜索图书 第2种写法
 void SearchBook2() {
-    auto books = Datastore::Select<Datastore::Book>([](const Datastore::Book* book) {
+    auto books = Datastore::Selects<Datastore::Book>([](const Datastore::Book* book) {
         return book->Remain > 0;
     });
     DestroyArray(books);
+}
+
+// 根据条件搜索符合条件的第一本图书 第2种写法
+void SearchABook2() {
+    auto book = Datastore::Select<Datastore::Book>([](const Datastore::Book* book) {
+        return strcmp(book->Isbn, "9787121155352") == 0;
+    });
+    delete book;
 }
 
 // 修改用户
@@ -79,13 +87,14 @@ void InsertRecord() {
 }
 
 // 注意初始化
-int main_() {
+int main() {
     Datastore::Init();
     InsertBook();
     UpdateBook();
     DeleteBook();
     SearchBook();
     SearchBook2();
+    SearchABook2();
     UpdateUser();
     InsertRecord();
     return 0;

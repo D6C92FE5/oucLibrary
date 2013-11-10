@@ -21,7 +21,7 @@
     <ClInclude Include="datastore.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="UserManager.h">
+    <ClInclude Include="config.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -32,7 +32,7 @@
     <ClCompile Include="datastore.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="UserManager.cpp">
+    <ClCompile Include="config.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

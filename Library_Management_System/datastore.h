@@ -1,5 +1,4 @@
-#ifndef _DATASTORE_H_
-#define _DATASTORE_H_
+#pragma once
 
 #include <cstdio>
 #include <cstdlib>
@@ -9,20 +8,19 @@
 #include <list>
 #include <direct.h>
 
+#include "config.h"
+
 namespace Datastore {
 
-    // 数据存储的文件所在的目录
-    extern const char* _PATH;
-    
     // 图书信息实体
     struct Book
     {
         int Index;
         bool IsDeleted;
-        char Isbn[14];
-        char Name[100];
-        char Author[100];
-        char Pulisher[100];
+        char Isbn[LEN_BOOK_ISBN];
+        char Name[LEN_BOOK_NAME];
+        char Author[LEN_BOOK_AUTHOR];
+        char Publisher[LEN_BOOK_PUBLISHER];
         int Total;
         int Remain;
     };
@@ -32,10 +30,10 @@ namespace Datastore {
     {
         int Index;
         bool IsDeleted;
-        char Name[100];
-        char Password[40];
-        char Type[10];
-        char Info[100];
+        char Name[LEN_USER_NAME];
+        char Password[LEN_USER_PASSWORD];
+        char Type[LEN_USER_TYPE];
+        char Info[LEN_USER_INFO];
     };
 
     // 借阅记录实体
@@ -51,24 +49,11 @@ namespace Datastore {
     };
 
     // 根据实体类型生成文件名
+    char* _GenerateFilePathByTypeName(const char* name);
     template <typename T>
     char* _GenerateFilePathByType() {
         auto name = typeid(T).name();
-
-        auto lengthName = strlen(name);
-        auto lengthPath = strlen(_PATH);
-        auto filepath = new char[lengthPath + lengthName + 1];
-
-        strcpy(filepath, _PATH);
-        strcpy(filepath + lengthPath, name);
-
-        for (auto i = lengthPath; i < lengthPath + lengthName; i++) {
-            if (strchr("\\/:*?\"<>| ", filepath[i]) != NULL) {
-                filepath[i] = '_';
-            }
-        }
-
-        return filepath;
+        return _GenerateFilePathByTypeName(name);
     }
 
     // 打开存储某种类型的实体的文件
@@ -118,7 +103,7 @@ namespace Datastore {
     // 返回 NULL 结尾的数组
     // where: 搜索条件
     template <typename T>
-    T** Select(const std::function<bool(const T*)> where, int beginIndex = 0, int maxCount = -1) {
+    T** Selects(const std::function<bool(const T*)> where, int beginIndex = 0, int maxCount = -1) {
         auto temp = std::list<T*>();
         auto count = 0;
         Traverse<T>([&](const T* item) {
@@ -138,6 +123,17 @@ namespace Datastore {
             i++;
         }
         result[temp.size()] = NULL;
+        return result;
+    }
+
+    // 根据条件选择一个实体
+    // 返回符合条件的第一个实体，没有找到时返回 NULL
+    // where: 搜索条件
+    template <typename T>
+    T* Select(const std::function<bool(const T*)> where, int beginIndex = 0) {
+        auto results = Selects(where, beginIndex, 1);
+        auto result = *results;
+        delete results;
         return result;
     }
 
@@ -203,5 +199,3 @@ namespace Datastore {
     void Init(bool force = false);
 
 }
-
-#endif // _DATASTORE_H_

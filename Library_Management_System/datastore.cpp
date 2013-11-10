@@ -1,12 +1,28 @@
 
+#include "config.h"
 #include "datastore.h"
 
 namespace Datastore {
 
-    const char* _PATH = ".\\Datastore\\";
+    char* _GenerateFilePathByTypeName(const char* name) {
+        auto lengthName = strlen(name);
+        auto lengthPath = strlen(Config::DATASTORE_PATH);
+        auto filepath = new char[lengthPath + lengthName + 1];
+
+        strcpy(filepath, Config::DATASTORE_PATH);
+        strcpy(filepath + lengthPath, name);
+
+        for (auto i = lengthPath; i < lengthPath + lengthName; i++) {
+            if (strchr("\\/:*?\"<>| ", filepath[i]) != NULL) {
+                filepath[i] = '_';
+            }
+        }
+
+        return filepath;
+    }
 
     void Init(bool force) {
-        _mkdir(_PATH);
+        _mkdir(Config::DATASTORE_PATH);
 
         if (force || !_IsFileExist<Book>()) {
             fclose(fopen(_GenerateFilePathByType<Book>(), "wb"));
