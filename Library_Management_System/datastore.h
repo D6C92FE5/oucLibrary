@@ -29,7 +29,7 @@ namespace Datastore {
     struct User
     {
         int Index;
-        bool IsDeleted;
+        bool IsDeleted;//trueÎªÒÑÉ¾
         char Name[LEN_USER_NAME];
         char Password[LEN_USER_PASSWORD];
         char Type[LEN_USER_TYPE];

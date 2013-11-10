@@ -33,5 +33,36 @@ namespace UserManager
 	void Logout()
 	{ 
 		IUser=NULL;
+		Type = "";
 	}
+	Datastore::User * InsertUser(string Name, string Password)
+	{
+		auto user = Datastore::Create<Datastore::User>();
+		char name[LEN_USER_NAME];
+		char password[LEN_USER_PASSWORD];
+		char type[LEN_USER_TYPE];
+		char info[LEN_USER_INFO];
+		for (int i = 0; Name[i] != 0; i++){ name[i] = Name[i]; }
+		for (int i = 0; Password[i] != 0; i++){ password[i] = Password[i]; }
+		strcpy(user->Name, name);
+		strcpy(user->Password, password);
+		strcpy(user->Info, info);
+		strcpy(user->Type, type);
+		user->IsDeleted = false;
+		Datastore::InsertOrUpdate(user);
+		delete user;
+	}
+	Datastore::User * SelectUser(string Name)
+	{
+		;
+	}
+	void DeleteUser(string Name)
+	{
+		;
+	}
+	void UpdataUser(string Name)
+	{
+		;
+	}
+
 }
