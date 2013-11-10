@@ -35,6 +35,8 @@ namespace UserManager
 		IUser=NULL;
 		Type = "";
 	}
+
+
 	Datastore::User * InsertUser(string Name, string Password)
 	{
 		auto user = Datastore::Create<Datastore::User>();
@@ -63,7 +65,7 @@ namespace UserManager
 		Datastore::Delete<Datastore::User>(user->Index);
 		delete user;
 	}
-	void UpdataUserPassword(string Name, string Password = "")
+	void UpdataUserPassword(string Name, string Password)
 	{
 		if (Password == "")return;
 		else {
@@ -73,7 +75,7 @@ namespace UserManager
 			delete user;
 		}
 	}
-	void UpdataUserInfo(string Name, string Info = "")
+	void UpdataUserInfo(string Name, string Info)
 	{
 		if (Info == "")return;
 		else {
