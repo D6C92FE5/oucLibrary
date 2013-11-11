@@ -73,7 +73,7 @@ namespace UserManager
 	}
 	Datastore::User * SelectUser(string Name)
 	{
-		if (Type != "管理员")return;
+		if (Type != "管理员")return NULL;
 		auto user = Datastore::Select<Datastore::User>([Name](const Datastore::User* user) {
 			return user->Name == Name;
 		});

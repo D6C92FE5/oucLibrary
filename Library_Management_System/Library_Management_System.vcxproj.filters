@@ -18,13 +18,13 @@
     <Text Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="UserManager.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="config.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="datastore.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="UserManager.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
