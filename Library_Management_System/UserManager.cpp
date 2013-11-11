@@ -41,10 +41,21 @@ namespace UserManager
 		IUser=NULL;
 		Type = "";
 	}
+	void UpdataOnesPassword(string Password)
+	{
+		;
+	}
+	void UpdataOnesInfo(string Info)
+	{
+		;
+	}
 
 
+
+	//管理员
 	void InsertUser(string Name, string Password)
 	{
+		if (Type != "管理员")return;
 		auto user = Datastore::Create<Datastore::User>();
 		char name[LEN_USER_NAME];
 		char password[LEN_USER_PASSWORD];
@@ -62,6 +73,7 @@ namespace UserManager
 	}
 	Datastore::User * SelectUser(string Name)
 	{
+		if (Type != "管理员")return;
 		auto user = Datastore::Select<Datastore::User>([Name](const Datastore::User* user) {
 			return user->Name == Name;
 		});
@@ -69,6 +81,7 @@ namespace UserManager
 	}
 	void DeleteUser(string Name)
 	{
+		if (Type != "管理员")return;
 		auto user = Datastore::Select<Datastore::User>([Name](const Datastore::User* user) {
 			return user->Name == Name;
 		});
@@ -77,6 +90,7 @@ namespace UserManager
 	}
 	void UpdataUserPassword(string Name, string Password)
 	{
+		if (Type != "管理员")return;
 		if (Password == "")return;
 		else {
 			auto user = Datastore::Select<Datastore::User>([Name](const Datastore::User* user) {
@@ -89,6 +103,7 @@ namespace UserManager
 	}
 	void UpdataUserInfo(string Name, string Info)
 	{
+		if (Type != "管理员")return;
 		if (Info == "")return;
 		else {
 			auto user = Datastore::Select<Datastore::User>([Name](const Datastore::User* user) {
