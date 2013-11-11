@@ -39,20 +39,34 @@ namespace UserManager
 	void Logout()
 	{ 
 		IUser=NULL;
-		Type = "";
+		Type.clear();
 	}
+	//一般用户
+	//用户成功登入下可用
 	void UpdataOnesPassword(string Password)
 	{
-		;
+		if (Type.size == 0)return;
+		for (int i = 0; i < Password.size(); i++)
+		{
+			IUser->Password[i]=Password[i];
+		}
+		Datastore::InsertOrUpdate(IUser);
 	}
 	void UpdataOnesInfo(string Info)
 	{
-		;
+		if (Type.size == 0)return;
+		for (int i = 0; i < Info.size(); i++)
+		{
+			IUser->Password[i] = Info[i];
+		}
+		Datastore::InsertOrUpdate(IUser);
 	}
 
 
-
+	
 	//管理员
+	//所有操作在管理员未登入的情况下无法进行
+	//搜索返回NULL
 	void InsertUser(string Name, string Password)
 	{
 		if (Type != "管理员")return;
