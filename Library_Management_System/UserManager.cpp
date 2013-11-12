@@ -6,8 +6,8 @@
 using namespace std;
 #include "UserManager.h"
 #include "datastore.h"
-extern string Type;
-extern Datastore::User * IUser;
+string Type;
+Datastore::User * IUser;
 //维护
 namespace UserManager
 {
@@ -40,6 +40,13 @@ namespace UserManager
 	{ 
 		IUser=NULL;
 		Type.clear();
+	}
+
+
+	bool UpLevel(string Name, string Password)
+	{
+		UserManager::Logout();
+		return UserManager::Login(Name, Password);
 	}
 	//一般用户
 	//用户成功登入下可用

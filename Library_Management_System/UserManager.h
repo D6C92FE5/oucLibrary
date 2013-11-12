@@ -6,15 +6,13 @@
 #include <cstdlib>
 using namespace std;
 #include "datastore.h"
+extern string Type;
+extern Datastore::User * IUser;
 namespace UserManager{
 	//
 	bool Login(string Name, string Password);
 	void Logout();
-	bool UpLevel(string Name, string Password)
-	{
-		UserManager::Logout();
-		return UserManager::Login(Name, Password);
-	}
+	bool UpLevel(string Name, string Password);
 	void UpdataOnesPassword(string Password);
 	void UpdataOnesInfo(string Info);
 	//管理员所有
