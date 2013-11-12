@@ -45,8 +45,9 @@ namespace UserManager
 	//用户成功登入下可用
 	void UpdataOnesPassword(string Password)
 	{
-		if (Type.size == 0)return;
-		for (int i = 0; i < Password.size(); i++)
+		if (Type.size() == 0)return;
+		int length = Password.size();
+		for (int i = 0; i < length ; i++)
 		{
 			IUser->Password[i]=Password[i];
 		}
@@ -54,8 +55,9 @@ namespace UserManager
 	}
 	void UpdataOnesInfo(string Info)
 	{
-		if (Type.size == 0)return;
-		for (int i = 0; i < Info.size(); i++)
+		if (Type.size() == 0)return;
+		int length = Info.size();
+		for (int i = 0; i < length; i++)
 		{
 			IUser->Password[i] = Info[i];
 		}
