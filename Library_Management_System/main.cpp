@@ -1,10 +1,19 @@
 #include "UserManager.h"
+#include "booker.h"
 #include <stdlib.h>
 #include <fstream>
 #include <conio.h>
+#include <iomanip>
+
+using namespace UserManager;
+using namespace Booker;
 
 void printLine(char * content){
 	cout << content << endl;
+}
+
+void print(char * content){
+	cout << content ;
 }
 
 void printLine(){
@@ -66,6 +75,29 @@ void printWrongTypeWarning(){
 	printLine("数据不合法，请重新输入！");
 }
 
+//打印书列表
+void printBookList(Datastore::Book** list){
+	int i = 0;
+	cout << setw(30) << "书名" << setw(20) << "作者" << setw(30) << "出版社" << setw(15) 
+		<< "ISBN" << setw(10) << "总计" << setw(10) << "可借" << endl;
+	while(list[i] != NULL){
+		cout << setw(30) << list[i]->Name << setw(20) << list[i]->Author << setw(30) << list[i]->Publisher << setw(15) 
+			<< list[i]->Isbn << setw(10) << list[i]->Total << setw(10) << list[i]->Remain << endl;
+		i++;
+	}
+}
+
+// 释放搜索结果
+template <typename T>
+void DestroyArray(T** array) {
+    auto temp = array;
+    while (*temp != NULL) {
+        delete *temp;
+        temp++;
+    }
+    delete array;
+}
+
 //获取一行字符串输入
 string getInputString(){
 	string input;
@@ -75,7 +107,7 @@ string getInputString(){
 
 //验证字符串每一位都是数字且没有先导0
 bool allNumric(const char * str){
-	if(str[0] == '0'){
+	if('0' == str[0]){
 		return false;
 	}
 	int i = 0;
@@ -93,11 +125,11 @@ bool isbnCheck(string str){
 	if((str.size() != 13 && str.size() != 10)){
 		return false;
 	}
-	if(str.size() == 13){
+	if(13 == str.size()){
 		if(allNumric(str.c_str())){
 			return true;
 		}
-	}else if(allNumric(str.c_str()) || (allNumric(str.substr(0,str.size() - 2).c_str()) && str.at(str.size() - 1) == 'X')){
+	}else if(allNumric(str.c_str()) || (allNumric(str.substr(0,str.size() - 2).c_str()) && 'X' == str.at(str.size() - 1))){
 		return true;
 	}
 	return false;
@@ -105,25 +137,28 @@ bool isbnCheck(string str){
 
 //提示并获取书名输入
 string getInputBookName(){
-	printLine("请输入书名：");
+	print("请输入书名：");
 	return getInputString();
 }
 
 //提示并获取用户名输入
 string getInputUserName(){
-	cout << "用户名：";
+	print("用户名：");
 	return getInputString();
 }
 
 //提示并获取不显示的密码输入（注：非C自带不具有可移植性，满20位自动截止返回）
 string getInputPassword(){
-	cout << "密码：";
+	print("密码：");
 	char buf[30];
 	int pos = 0;
 	buf[pos] = getch();
-	while(buf[pos] != '\r' && pos < 20){
+	while(buf[pos] != 13 && pos < 20){
 		pos++;
 		buf[pos] = getch();
+	}
+	if(0 == pos){
+		return "";
 	}
 	buf[pos] = '\0';
 	return buf;
@@ -160,11 +195,29 @@ string getInputIsbn(){
 
 void visitorMenu(){
 	int choice = 0;
+	string userName;
+	string bookName;
+	string pwd;
+	Datastore::Book**  bookList;
 	printVisitorMenu();
 	choice = getInputPosNum(2);
 	switch (choice)
 	{
 	case 1:
+		bookName = getInputBookName();
+		bookList = AnythingIsbnFindBook(bookName);
+		printBookList(bookList);
+		DestroyArray(bookList);
+	case 2:
+		printVisitorMenu();
+		userName = getInputUserName();
+		pwd = getInputPassword();
+		if(!Login(userName, pwd)){
+			printLine("用户名/密码错误！");
+		}else{
+			printLine("欢迎回来！");
+
+		}
 	default:
 		break;
 	}
@@ -172,10 +225,7 @@ void visitorMenu(){
 
 int main(){
     Datastore::Init();
-	printAdminMenu();
-	printUserMenu();
-	printVisitorMenu();
-	string aa;
+	visitorMenu();
 	int a ;
 	cin >> a;
 
@@ -185,7 +235,6 @@ int main(){
 //插入示例图书的代码
 int __main ()
 {
-	Datastore::Init();
 	ifstream infile("书目信息.txt");
 	string temp;
 	while (getline(infile, temp))

@@ -4,6 +4,8 @@
 namespace Booker{
 ///内部使用
 	//Isbn查找条件
+	string Temp, AnotherTemp;
+	int BookIndex, UserIndex;
 	bool SearchBookCondition(const Datastore::Book* book)
 	{
 		return !strcmp(book->Isbn, &Temp[0]);

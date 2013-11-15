@@ -18,8 +18,8 @@ using namespace std;
 
 namespace Booker{
 ///内部使用
-	string Temp, AnotherTemp;
-	int BookIndex, UserIndex;
+	extern string Temp, AnotherTemp;
+	extern int BookIndex, UserIndex;
 	//Isbn搜索图书
 	bool SearchBookCondition(const Datastore::Book* book);
 	
