@@ -58,7 +58,7 @@ namespace Booker{
 	Datastore::Book** IsbnFindBook(string Isbn);
 	
 	//Anything≤È’“Õº È
-	Datastore::Book** AnythingIsbnFindBook(string Anything);
+	Datastore::Book** AnythingFindBook(string Anything);
 
 	//ΩË È
 	bool BrowseBook(string Account, string Isbn);

@@ -205,7 +205,7 @@ void visitorMenu(){
 	{
 	case 1:
 		bookName = getInputBookName();
-		bookList = AnythingIsbnFindBook(bookName);
+		bookList = AnythingFindBook(bookName);
 		printBookList(bookList);
 		DestroyArray(bookList);
 	case 2:
@@ -221,15 +221,6 @@ void visitorMenu(){
 	default:
 		break;
 	}
-}
-
-int main(){
-    Datastore::Init();
-	visitorMenu();
-	int a ;
-	cin >> a;
-
-	return 0;
 }
 
 //插入示例图书的代码
@@ -254,3 +245,13 @@ int __main ()
 	}
 	return 0;
 }
+
+int main(){
+    Datastore::Init();
+	__main();
+	visitorMenu();
+	int a ;
+	cin >> a;
+	return 0;
+}
+
