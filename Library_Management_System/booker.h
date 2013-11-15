@@ -17,35 +17,35 @@
 using namespace std;
 
 namespace Booker{
-///鍐呴儴浣跨敤
+///内部使用
 	string Temp, AnotherTemp;
 	int BookIndex, UserIndex;
-	//Isbn鎼滅储鍥句功
+	//Isbn搜索图书
 	bool SearchBookCondition(Datastore::Book* book);
 	
-	//妯＄硦鎼滅储鍥句功
+	//模糊搜索图书
 	bool AnotherSearchBookCondition(Datastore::Book* book);
 
-	//缂栬緫璺濈,杈呭姪鎼滅储
+	//编辑距离,辅助搜索
 	int DistanceBetweenThem(string a, string b);
 
-	//Accout鎼滅储璁板綍
+	//Accout搜索记录
 	bool SearchRecordCondition(Datastore::Record* record);
 
-	//Account&Isbn鎼滅储璁板綍
+	//Account&Isbn搜索记录
 	bool AnotherSearchRecordCondition(Datastore::Record* record);
 
-	//Account&Isbn鏌ユ壘璁板綍
+	//Account&Isbn查找记录
 	Datastore::Record** IsbnFindRecord(string Account, string Isbn);
 	
-///澶栭儴InterFace
-	//澧炲姞鍥句功
+///外部InterFace
+	//增加图书
 	bool AddBook(string Isbn, string Name, string Author, string Publisher, int Num);
 	
-	//鍒犻櫎鍥句功
+	//删除图书
 	bool DeleteBook(string Isbn, int Num);
 	
-	//鏇存敼鍥句功淇℃伅
+	//更改图书信息
 	bool ChangeBookIsbn(string Isbn, string NewIsbn);
 
 	bool ChangeBookName(string Isbn, string Name);
@@ -54,19 +54,19 @@ namespace Booker{
 
 	bool ChangeBookPublisher(string Isbn, string Publisher);
 	
-	//Isbn鏌ユ壘鍥句功
+	//Isbn查找图书
 	Datastore::Book** IsbnFindBook(string Isbn);
 	
-	//Anything鏌ユ壘鍥句功
+	//Anything查找图书
 	Datastore::Book** AnythingIsbnFindBook(string Anything);
 
-	//鍊熶功
+	//借书
 	bool BrowseBook(string Account, string Isbn);
 	
-	//1姝ｅ父杩樹功,-1瓒呮湡杩樹功,0杩樹功澶辫触
+	//1正常还书,-1超期还书,0还书失败
 	int ReturnBook(string Account, string Isbn);
 
-	//Account鏌ユ壘璁板綍
+	//Account查找记录
 	Datastore::Record** AccountFindRecord(string Account);
 }
 

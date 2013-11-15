@@ -2,20 +2,20 @@
 #include "datastore.h"
 
 namespace Booker{
-///å†…éƒ¨ä½¿ç”¨
-	//IsbnæŸ¥æ‰¾æ¡ä»¶
+///ÄÚ²¿Ê¹ÓÃ
+	//Isbn²éÕÒÌõ¼ş
 	bool SearchBookCondition(Datastore::Book* book)
 	{
 		return !strcmp(book->Isbn, &Temp[0]);
 	}
 	
-	//UseræŸ¥æ‰¾æ¡ä»¶
+	//User²éÕÒÌõ¼ş
 	bool SearchUserCondition(Datastore::User* user)
 	{
 		return !strcmp(user->Name, &Temp[0]);
 	}
 	
-	//æ¨¡ç³Šæœç´¢å›¾ä¹¦
+	//Ä£ºıËÑË÷Í¼Êé
 	bool AnotherSearchBookCondition(Datastore::Book* book)
 	{
 		if (DistanceBetweenThem(Temp, book->Isbn) < Temp.length() / 3.0)
@@ -38,7 +38,7 @@ namespace Booker{
 		return false;
 	}
 
-	//ç¼–è¾‘è·ç¦»,è¾…åŠ©æœç´¢
+	//±à¼­¾àÀë,¸¨ÖúËÑË÷
 	int DistanceBetweenThem(string a, string b)
 	{
 		int lena = a.length(), lenb = b.length(), i = 0;
@@ -82,19 +82,19 @@ namespace Booker{
 		return result;
 	}
 	
-	//Accoutæœç´¢è®°å½•
+	//AccoutËÑË÷¼ÇÂ¼
 	bool SearchRecordCondition(Datastore::Record* record)
 	{
 		return !(record->UserIndex - UserIndex);
 	}
 
-	//Account&Isbnæœç´¢è®°å½•
+	//Account&IsbnËÑË÷¼ÇÂ¼
 	bool AnotherSearchRecordCondition(Datastore::Record* record)
 	{
 		return (((!(record->UserIndex - UserIndex)) & (!(record->BookIndex - BookIndex))) & (!record->IsReturned));
 	}
 
-	//Account&IsbnæŸ¥æ‰¾è®°å½•
+	//Account&Isbn²éÕÒ¼ÇÂ¼
 	Datastore::Record** IsbnFindRecord(string Account, string Isbn)
 	{
 		Temp = Account;
@@ -116,8 +116,8 @@ namespace Booker{
 		}
 	}
 
-///å¤–éƒ¨InterFace
-	//å¢åŠ å›¾ä¹¦
+///Íâ²¿InterFace
+	//Ôö¼ÓÍ¼Êé
 	bool AddBook(string Isbn, string Name, string Author, string Publisher, int Num)
 	{
 		if (Isbn.length() == 13 && Name.length() > 0 && Name.length() < 100 && Author.length() > 0 && Author.length() < 100 && Publisher.length() > 0 && Publisher.length() < 100 && Num > 0)
@@ -159,7 +159,7 @@ namespace Booker{
 		}
 	}
 	
-	//åˆ é™¤å›¾ä¹¦
+	//É¾³ıÍ¼Êé
 	bool DeleteBook(string Isbn, int Num)
 	{
 		Temp = Isbn;
@@ -177,7 +177,7 @@ namespace Booker{
 		return false;
 	}
 
-	//æ›´æ”¹Isbn
+	//¸ü¸ÄIsbn
 	bool ChangeBookIsbn(string Isbn, string NewIsbn)
 	{
 		Temp = Isbn;
@@ -195,7 +195,7 @@ namespace Booker{
 		return false;
 	}
 	
-	//æ›´æ”¹Name
+	//¸ü¸ÄName
 	bool ChangeBookName(string Isbn, string Name)
 	{
 		Temp = Isbn;
@@ -212,7 +212,7 @@ namespace Booker{
 		return false;
 	}
 	
-	//æ›´æ”¹Author
+	//¸ü¸ÄAuthor
 	bool ChangeBookAuthor(string Isbn, string Author)
 	{
 		Temp = Isbn;
@@ -229,7 +229,7 @@ namespace Booker{
 		return false;
 	}
 	
-	//æ›´æ”¹Publisher
+	//¸ü¸ÄPublisher
 	bool ChangeBookPublisher(string Isbn, string Publisher)
 	{
 		Temp = Isbn;
@@ -246,14 +246,14 @@ namespace Booker{
 		return false;
 	}
 
-	//IsbnæŸ¥æ‰¾Book
+	//Isbn²éÕÒBook
 	Datastore::Book** IsbnFindBook(string Isbn)
 	{
 		Temp = Isbn;
 
 		Datastore::Book **book = Datastore::Select<Datastore::Book>(SearchBookCondition);
 
-		if (book[0] == NULL)	//æ²¡æ‰¾åˆ°
+		if (book[0] == NULL)	//Ã»ÕÒµ½
 		{
 			return NULL;
 		}
@@ -261,14 +261,14 @@ namespace Booker{
 		return book;
 	}
 
-	//æ¡ä»¶æŸ¥æ‰¾å›¾ä¹¦
+	//Ìõ¼ş²éÕÒÍ¼Êé
 	Datastore::Book** AnythingFindBook(string Anything)
 	{
 		Temp = Anything;
 
 		Datastore::Book **book = Datastore::Select<Datastore::Book>(AnotherSearchBookCondition);
 
-		if (book[0] == NULL)	//æ²¡æ‰¾åˆ°
+		if (book[0] == NULL)	//Ã»ÕÒµ½
 		{
 			return NULL;
 		}
@@ -276,7 +276,7 @@ namespace Booker{
 		return book;
 	}
 	
-	//AccountæŸ¥æ‰¾è®°å½•
+	//Account²éÕÒ¼ÇÂ¼
 	Datastore::Record** AccountFindRecord(string Account)
 	{
 		Temp = Account;
@@ -295,7 +295,7 @@ namespace Booker{
 		}
 	}
 
-	//å€Ÿé˜…å›¾ä¹¦
+	//½èÔÄÍ¼Êé
 	bool BrowseBook(string Account, string Isbn)
 	{
 		Temp = Account;
@@ -322,7 +322,7 @@ namespace Booker{
 		return false;
 	}
 	
-	//å½’è¿˜å›¾ä¹¦
+	//¹é»¹Í¼Êé
 	int ReturnBook(string Account, string Isbn)
 	{
 		Temp = Account;
