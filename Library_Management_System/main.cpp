@@ -103,7 +103,6 @@ bool isbnCheck(string str){
 	return false;
 }
 
-
 //提示并获取书名输入
 string getInputBookName(){
 	printLine("请输入书名：");
@@ -116,7 +115,7 @@ string getInputUserName(){
 	return getInputString();
 }
 
-//提示并获取密码输入（注：非C自带不具有可移植性）
+//提示并获取不显示的密码输入（注：非C自带不具有可移植性，满20位自动截止返回）
 string getInputPassword(){
 	cout << "密码：";
 	char buf[30];
