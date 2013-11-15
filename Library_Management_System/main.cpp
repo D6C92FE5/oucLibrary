@@ -78,6 +78,9 @@ void printWrongTypeWarning(){
 //打印书列表
 void printBookList(Datastore::Book** list){
 	int i = 0;
+	if(list[0] == NULL){
+		printLine("找不到相关图书！");
+	}
 	cout << setw(30) << "书名" << setw(20) << "作者" << setw(30) << "出版社" << setw(15) 
 		<< "ISBN" << setw(10) << "总计" << setw(10) << "可借" << endl;
 	while(list[i] != NULL){
@@ -95,13 +98,16 @@ void DestroyArray(T** array) {
         delete *temp;
         temp++;
     }
-    delete array;
+    delete [] array;
 }
 
 //获取一行字符串输入
 string getInputString(){
 	string input;
 	getline(cin, input);
+	if("" == input){
+		return "";
+	}
 	return input;
 }
 
@@ -153,12 +159,15 @@ string getInputPassword(){
 	char buf[30];
 	int pos = 0;
 	buf[pos] = getch();
-	while(buf[pos] != 13 && pos < 20){
+	while(buf[pos] != '\r' && pos < 20){
 		pos++;
 		buf[pos] = getch();
 	}
 	if(0 == pos){
 		return "";
+	}
+	if(pos == 20 && buf[pos] != '\r'){
+		pos++;
 	}
 	buf[pos] = '\0';
 	return buf;
@@ -193,6 +202,7 @@ string getInputIsbn(){
 	return input;
 }
 
+//游客菜单
 void visitorMenu(){
 	int choice = 0;
 	string userName;
@@ -208,20 +218,31 @@ void visitorMenu(){
 		bookList = AnythingFindBook(bookName);
 		printBookList(bookList);
 		DestroyArray(bookList);
+		break;
 	case 2:
 		printVisitorMenu();
 		userName = getInputUserName();
 		pwd = getInputPassword();
+		printf("%c 111 %c", userName,pwd);
+		int aa;
+		cin >> aa;
 		if(!Login(userName, pwd)){
 			printLine("用户名/密码错误！");
 		}else{
 			printLine("欢迎回来！");
-
 		}
 	default:
 		break;
 	}
 }
+
+//普通用户菜单
+void normalMenu(){
+
+}
+
+//管理员菜单
+
 
 //插入示例图书的代码
 int __main ()
@@ -248,7 +269,6 @@ int __main ()
 
 int main(){
     Datastore::Init();
-	__main();
 	visitorMenu();
 	int a ;
 	cin >> a;

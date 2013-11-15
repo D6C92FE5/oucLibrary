@@ -270,11 +270,6 @@ namespace Booker{
 
 		Datastore::Book **book = Datastore::Selects<Datastore::Book>(AnotherSearchBookCondition);
 
-		if (book[0] == NULL)	//√ª’“µΩ
-		{
-			return NULL;
-		}
-
 		return book;
 	}
 	

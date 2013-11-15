@@ -7,7 +7,6 @@
 #include <string.h>
 #include <string>
 #include <cstdio>
-#include <string>
 #include <cstdlib>
 #include <ctime>
 #include <cmath>
