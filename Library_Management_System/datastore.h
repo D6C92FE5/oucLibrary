@@ -133,7 +133,7 @@ namespace Datastore {
     T* Select(const std::function<bool(const T*)> where, int beginIndex = 0) {
         auto results = Selects(where, beginIndex, 1);
         auto result = *results;
-        delete results;
+        delete [] results;
         return result;
     }
 
