@@ -8,6 +8,22 @@
 using namespace UserManager;
 using namespace Booker;
 
+/*
+ *“记录下一步将要进入的菜单”标志位
+ * 将菜单调度统一到main()中
+ * 用于防止菜单函数间调用引发栈溢出
+ */
+int menuTag = 1;
+/*
+ * 1 游客菜单
+ * 2 普通用户菜单
+ * 3 管理员菜单
+ * 22 修改个人信息菜单
+ * 33 修改书目信息菜单 
+ *  
+ * 0 退出系统
+ */
+
 void printLine(char * content){
 	cout << content << endl;
 }
@@ -62,10 +78,21 @@ void printAdminMenu(){
 }
 
 //打印修改个人信息菜单
-void printInfoChangeMenu(){
+void printUserInfoChangeMenu(){
 	printLine("-----修改个人信息-----");
 	printLine("1.修改密码");
 	printLine("2.修改简介");
+	printLine("0.返回");
+	printLine("----------------------");
+}
+
+//打印修改书目信息菜单
+void printBookInfoChangeMenu(){
+	printLine("-----修改图书信息-----");
+	printLine("1.修改书名");
+	printLine("2.修改作者");
+	printLine("3.修改出版社");
+	printLine("4.修改ISBN");
 	printLine("0.返回");
 	printLine("----------------------");
 }
@@ -184,7 +211,7 @@ int getInputPosNum(int maxNum = 0){
 				printWrongTypeWarning();
 			}
 		}
-	};
+	}
 	return num;
 }
 
@@ -215,14 +242,13 @@ void visitorMenu(){
 		bookList = AnythingFindBook(bookName);
 		printBookList(bookList);
 		DestroyArray(bookList);
+
 		break;
 	case 2:
 		printVisitorMenu();
 		userName = getInputUserName();
 		pwd = getInputPassword();
-		printf("%c 111 %c", userName,pwd);
-		int aa;
-		cin >> aa;
+		cout << pwd << endl;//                                                                    TODO！！！
 		if(!Login(userName, pwd)){
 			printLine("用户名/密码错误！");
 		}else{
@@ -235,7 +261,22 @@ void visitorMenu(){
 
 //普通用户菜单
 void normalMenu(){
-
+	int choice = 0;
+	string userName;
+	string bookName;
+	string pwd;
+	Datastore::Book**  bookList;
+	printUserMenu();
+	choice = getInputPosNum(3);
+	switch (choice)
+	{
+	case 1:break;
+	case 2:break;
+	case 3:break;
+	case 0:break;
+	default:
+		break;
+	}
 }
 
 //管理员菜单
@@ -267,8 +308,21 @@ int __main ()
 int main(){
     Datastore::Init();
 	visitorMenu();
-	int a ;
-	cin >> a;
+	while(menuTag != 0){
+		switch (menuTag)
+		{
+		case 1:break;
+		case 2:break;
+		case 3:break;
+		case 22:break;
+		case 33:break;
+		case 0:break;
+		default:
+			printLine("However, you get here boy, it's not fun, you must leave!");
+			break;
+		}
+	}
+	printLine("Have a nice day!Bye bye!");
 	return 0;
 }
 
