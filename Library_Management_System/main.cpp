@@ -267,6 +267,34 @@ void normalMenu(){
 	string pwd;
 	Datastore::Book**  bookList;
 	printUserMenu();
+	choice = getInputPosNum(11);
+	switch (choice)
+	{
+	case 1:break;
+	case 2:break;
+	case 3:break;
+	case 4:break;
+	case 5:break;
+	case 6:break;
+	case 7:break;
+	case 8:break;
+	case 9:break;
+	case 10:break;
+	case 11:break;
+	case 0:break;
+	default:
+		break;
+	}
+}
+
+//管理员菜单
+void adminMenu(){
+	int choice = 0;
+	string userName;
+	string bookName;
+	string pwd;
+	Datastore::Book**  bookList;
+	printUserMenu();
 	choice = getInputPosNum(3);
 	switch (choice)
 	{
@@ -279,8 +307,10 @@ void normalMenu(){
 	}
 }
 
-//管理员菜单
+//修改图书信息菜单
+void bookInfoChangeMenu(){
 
+}
 
 //插入示例图书的代码
 int __main ()
@@ -311,9 +341,9 @@ int main(){
 	while(menuTag != 0){
 		switch (menuTag)
 		{
-		case 1:break;
-		case 2:break;
-		case 3:break;
+		case 1:visitorMenu();break;
+		case 2:normalMenu();break;
+		case 3:adminMenu();break;
 		case 22:break;
 		case 33:break;
 		case 0:break;
