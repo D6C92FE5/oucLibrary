@@ -28,6 +28,9 @@
     <ClInclude Include="UserManager.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="booker.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="_datastore_example.cpp">
@@ -43,6 +46,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="booker.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

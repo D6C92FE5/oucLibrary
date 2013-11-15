@@ -109,11 +109,13 @@
     <Text Include="书目信息.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="booker.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="datastore.h" />
     <ClInclude Include="UserManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="booker.cpp" />
     <ClCompile Include="config.cpp" />
     <ClCompile Include="datastore.cpp" />
     <ClCompile Include="main.cpp" />
