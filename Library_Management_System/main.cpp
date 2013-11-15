@@ -105,9 +105,6 @@ void DestroyArray(T** array) {
 string getInputString(){
 	string input;
 	getline(cin, input);
-	if("" == input){
-		return "";
-	}
 	return input;
 }
 
