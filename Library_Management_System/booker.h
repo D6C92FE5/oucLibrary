@@ -21,19 +21,19 @@ namespace Booker{
 	string Temp, AnotherTemp;
 	int BookIndex, UserIndex;
 	//IsbnËÑË÷Í¼Êé
-	bool SearchBookCondition(Datastore::Book* book);
+	bool SearchBookCondition(const Datastore::Book* book);
 	
 	//Ä£ºýËÑË÷Í¼Êé
-	bool AnotherSearchBookCondition(Datastore::Book* book);
+	bool AnotherSearchBookCondition(const Datastore::Book* book);
 
 	//±à¼­¾àÀë,¸¨ÖúËÑË÷
 	int DistanceBetweenThem(string a, string b);
 
 	//AccoutËÑË÷¼ÇÂ¼
-	bool SearchRecordCondition(Datastore::Record* record);
+	bool SearchRecordCondition(const Datastore::Record* record);
 
 	//Account&IsbnËÑË÷¼ÇÂ¼
-	bool AnotherSearchRecordCondition(Datastore::Record* record);
+	bool AnotherSearchRecordCondition(const Datastore::Record* record);
 
 	//Account&Isbn²éÕÒ¼ÇÂ¼
 	Datastore::Record** IsbnFindRecord(string Account, string Isbn);

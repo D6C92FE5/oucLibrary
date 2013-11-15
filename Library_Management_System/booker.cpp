@@ -4,19 +4,19 @@
 namespace Booker{
 ///内部使用
 	//Isbn查找条件
-	bool SearchBookCondition(Datastore::Book* book)
+	bool SearchBookCondition(const Datastore::Book* book)
 	{
 		return !strcmp(book->Isbn, &Temp[0]);
 	}
 	
 	//User查找条件
-	bool SearchUserCondition(Datastore::User* user)
+	bool SearchUserCondition(const Datastore::User* user)
 	{
 		return !strcmp(user->Name, &Temp[0]);
 	}
 	
 	//模糊搜索图书
-	bool AnotherSearchBookCondition(Datastore::Book* book)
+	bool AnotherSearchBookCondition(const Datastore::Book* book)
 	{
 		if (DistanceBetweenThem(Temp, book->Isbn) < Temp.length() / 3.0)
 		{
@@ -30,7 +30,7 @@ namespace Booker{
 		{
 			return true;
 		}
-		else if (DistanceBetweenThem(Temp, book->Pulisher) < Temp.length() / 3.0)
+		else if (DistanceBetweenThem(Temp, book->Publisher) < Temp.length() / 3.0)
 		{
 			return true;
 		}
@@ -83,13 +83,13 @@ namespace Booker{
 	}
 	
 	//Accout搜索记录
-	bool SearchRecordCondition(Datastore::Record* record)
+	bool SearchRecordCondition(const Datastore::Record* record)
 	{
 		return !(record->UserIndex - UserIndex);
 	}
 
 	//Account&Isbn搜索记录
-	bool AnotherSearchRecordCondition(Datastore::Record* record)
+	bool AnotherSearchRecordCondition(const Datastore::Record* record)
 	{
 		return (((!(record->UserIndex - UserIndex)) & (!(record->BookIndex - BookIndex))) & (!record->IsReturned));
 	}
@@ -98,14 +98,14 @@ namespace Booker{
 	Datastore::Record** IsbnFindRecord(string Account, string Isbn)
 	{
 		Temp = Account;
-		Datastore::User **user = Datastore::Select<Datastore::User>(SearchUserCondition);
+		Datastore::User **user = Datastore::Selects<Datastore::User>(SearchUserCondition);
 		Temp = Isbn;
-		Datastore::Book **book = Datastore::Select<Datastore::Book>(SearchBookCondition);
+		Datastore::Book **book = Datastore::Selects<Datastore::Book>(SearchBookCondition);
 		if (user[0] != NULL && book[0] != NULL)
 		{
 			UserIndex = user[0]->Index;
 			BookIndex = book[0]->Index;
-			Datastore::Record **record = Datastore::Select<Datastore::Record>(AnotherSearchRecordCondition);
+			Datastore::Record **record = Datastore::Selects<Datastore::Record>(AnotherSearchRecordCondition);
 			delete [] user;
 			delete [] book;
 			return record;
@@ -131,7 +131,7 @@ namespace Booker{
 			}
 
 			Temp = Isbn;
-			Datastore::Book **book = Datastore::Select<Datastore::Book>(SearchBookCondition);
+			Datastore::Book **book = Datastore::Selects<Datastore::Book>(SearchBookCondition);
 
 			if (book[0] != NULL)
 			{
@@ -145,7 +145,7 @@ namespace Booker{
 			strcpy(books->Name, &Name[0]);
 			strcpy(books->Isbn, &Isbn[0]);
 			strcpy(books->Author, &Author[0]);
-			strcpy(books->Pulisher, &Publisher[0]);
+			strcpy(books->Publisher, &Publisher[0]);
 			books->Total = Num;
 			books->Remain = Num;
 			Datastore::InsertOrUpdate(books);
@@ -163,7 +163,7 @@ namespace Booker{
 	bool DeleteBook(string Isbn, int Num)
 	{
 		Temp = Isbn;
-		Datastore::Book **book = Datastore::Select<Datastore::Book>(SearchBookCondition);
+		Datastore::Book **book = Datastore::Selects<Datastore::Book>(SearchBookCondition);
 
 		if (book[0] != NULL && book[0]->Remain >= Num)
 		{
@@ -181,9 +181,9 @@ namespace Booker{
 	bool ChangeBookIsbn(string Isbn, string NewIsbn)
 	{
 		Temp = Isbn;
-		Datastore::Book **book = Datastore::Select<Datastore::Book>(SearchBookCondition);
+		Datastore::Book **book = Datastore::Selects<Datastore::Book>(SearchBookCondition);
 		Temp = NewIsbn;
-		Datastore::Book **newbook = Datastore::Select<Datastore::Book>(SearchBookCondition);
+		Datastore::Book **newbook = Datastore::Selects<Datastore::Book>(SearchBookCondition);
 		if (book[0] != NULL && newbook[0] == NULL)
 		{
 			strcpy(book[0]->Isbn, &Isbn[0]);
@@ -199,7 +199,7 @@ namespace Booker{
 	bool ChangeBookName(string Isbn, string Name)
 	{
 		Temp = Isbn;
-		Datastore::Book **book = Datastore::Select<Datastore::Book>(SearchBookCondition);
+		Datastore::Book **book = Datastore::Selects<Datastore::Book>(SearchBookCondition);
 
 		if (book[0] != NULL)
 		{
@@ -216,11 +216,11 @@ namespace Booker{
 	bool ChangeBookAuthor(string Isbn, string Author)
 	{
 		Temp = Isbn;
-		Datastore::Book **book = Datastore::Select<Datastore::Book>(SearchBookCondition);
+		Datastore::Book **book = Datastore::Selects<Datastore::Book>(SearchBookCondition);
 
 		if (book[0] != NULL)
 		{
-			strcpy(book[0]->Pulisher, &Author[0]);
+			strcpy(book[0]->Publisher, &Author[0]);
 			Datastore::InsertOrUpdate(book[0]);
 			delete [] book;
 			return true;
@@ -233,11 +233,11 @@ namespace Booker{
 	bool ChangeBookPublisher(string Isbn, string Publisher)
 	{
 		Temp = Isbn;
-		Datastore::Book **book = Datastore::Select<Datastore::Book>(SearchBookCondition);
+		Datastore::Book **book = Datastore::Selects<Datastore::Book>(SearchBookCondition);
 
 		if (book[0] != NULL)
 		{
-			strcpy(book[0]->Pulisher, &Publisher[0]);
+			strcpy(book[0]->Publisher, &Publisher[0]);
 			Datastore::InsertOrUpdate(book[0]);
 			delete [] book;
 			return true;
@@ -251,7 +251,7 @@ namespace Booker{
 	{
 		Temp = Isbn;
 
-		Datastore::Book **book = Datastore::Select<Datastore::Book>(SearchBookCondition);
+		Datastore::Book **book = Datastore::Selects<Datastore::Book>(SearchBookCondition);
 
 		if (book[0] == NULL)	//没找到
 		{
@@ -266,7 +266,7 @@ namespace Booker{
 	{
 		Temp = Anything;
 
-		Datastore::Book **book = Datastore::Select<Datastore::Book>(AnotherSearchBookCondition);
+		Datastore::Book **book = Datastore::Selects<Datastore::Book>(AnotherSearchBookCondition);
 
 		if (book[0] == NULL)	//没找到
 		{
@@ -280,12 +280,12 @@ namespace Booker{
 	Datastore::Record** AccountFindRecord(string Account)
 	{
 		Temp = Account;
-		Datastore::User **user = Datastore::Select<Datastore::User>(SearchUserCondition);
+		Datastore::User **user = Datastore::Selects<Datastore::User>(SearchUserCondition);
 		
 		if (user[0] != NULL)
 		{
 			UserIndex = user[0]->Index;
-			Datastore::Record **record = Datastore::Select<Datastore::Record>(AnotherSearchBookCondition);
+			Datastore::Record **record = Datastore::Selects<Datastore::Record>(AnotherSearchRecordCondition);
 			delete [] user;
 			return record;
 		}
@@ -299,9 +299,9 @@ namespace Booker{
 	bool BrowseBook(string Account, string Isbn)
 	{
 		Temp = Account;
-		Datastore::User **user = Datastore::Select<Datastore::User>(SearchUserCondition);
+		Datastore::User **user = Datastore::Selects<Datastore::User>(SearchUserCondition);
 		Temp = Isbn;
-		Datastore::Book **book = Datastore::Select<Datastore::Book>(SearchBookCondition);
+		Datastore::Book **book = Datastore::Selects<Datastore::Book>(SearchBookCondition);
 
 		if (user[0] != NULL && book[0] != NULL && book[0]->Remain > 0)
 		{
@@ -326,9 +326,9 @@ namespace Booker{
 	int ReturnBook(string Account, string Isbn)
 	{
 		Temp = Account;
-		Datastore::User **user = Datastore::Select<Datastore::User>(SearchUserCondition);
+		Datastore::User **user = Datastore::Selects<Datastore::User>(SearchUserCondition);
 		Temp = Isbn;
-		Datastore::Book **book = Datastore::Select<Datastore::Book>(SearchBookCondition);
+		Datastore::Book **book = Datastore::Selects<Datastore::Book>(SearchBookCondition);
 
 		UserIndex = user[0]->Index;
 		BookIndex = book[0]->Index;
@@ -343,7 +343,7 @@ namespace Booker{
 			if (record[i]->IsReturned = false)
 			{
 				record[i]->IsReturned = true;
-				Datastore::InsertOrUpdate(record);
+				Datastore::InsertOrUpdate(record[i]);
 
 				if ((double)(clock() - record[i]->Datetime) / CLOCKS_PER_SEC > 30 * 86400)
 				{
