@@ -19,10 +19,10 @@ namespace UserManager
 		for (int i = 0; Password[i] != 0; i++){ password[i] = Password[i]; }
 		strcpy(IUser->Name, name);
 		auto user = Datastore::Select<Datastore::User>([Name](const Datastore::User* user) {
-			return user->Name==Name;
+			return user->Name == Name;
 		});
 		if (user == NULL) return false;
-		if (strcmp(user->Password,password)){
+		if (strcmp(user->Password, password) == 0){
 			Type = user->Type;
 			IUser->Index = user->Index;
 			IUser->IsDeleted = user->IsDeleted;
@@ -39,9 +39,9 @@ namespace UserManager
 
 
 	void Logout()
-	{ 
+	{
 		delete IUser;
-		IUser=NULL;
+		IUser = NULL;
 		Type.clear();
 	}
 
@@ -57,9 +57,9 @@ namespace UserManager
 	{
 		if (Type.size() == 0)return;
 		int length = Password.size();
-		for (int i = 0; i < length ; i++)
+		for (int i = 0; i < length; i++)
 		{
-			IUser->Password[i]=Password[i];
+			IUser->Password[i] = Password[i];
 		}
 		Datastore::InsertOrUpdate(IUser);
 	}
@@ -75,7 +75,7 @@ namespace UserManager
 	}
 
 
-	
+
 	//管理员
 	//所有操作在管理员未登入的情况下无法进行
 	//搜索返回NULL
