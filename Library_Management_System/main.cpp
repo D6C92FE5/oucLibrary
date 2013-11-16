@@ -317,7 +317,7 @@ void userInfoChangeByUserMenu(){
 	switch (choice)
 	{
 	case 1:
-	case 2:
+	case 2:  
 		if(IUser != NULL && strcmp(IUser->Type, "ÓÃ»§") == 0){
 			userName = IUser->Name;
 		}else {
