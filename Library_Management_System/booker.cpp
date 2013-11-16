@@ -2,7 +2,7 @@
 #include "datastore.h"
 
 namespace Booker{
-///内部使用
+	///内部使用
 	//Isbn查找条件
 	string Temp, AnotherTemp;
 	int BookIndex, UserIndex;
@@ -10,13 +10,13 @@ namespace Booker{
 	{
 		return !strcmp(book->Isbn, &Temp[0]);
 	}
-	
+
 	//User查找条件
 	bool SearchUserCondition(const Datastore::User* user)
 	{
 		return !strcmp(user->Name, &Temp[0]);
 	}
-	
+
 	//模糊搜索图书
 	bool AnotherSearchBookCondition(const Datastore::Book* book)
 	{
@@ -43,20 +43,25 @@ namespace Booker{
 	//编辑距离,辅助搜索
 	int DistanceBetweenThem(string a, string b)
 	{
-		int lena = a.length(), lenb = b.length(), i = 0;	
-		int **dp = new int*[lena + 1];	
+		int lena = a.length(), lenb = b.length(), i = 0;
+
+		int **dp = new int*[lena + 1];
+
 		for (i = 0; i <= lena; i++)
 		{
 			dp[i] = new int[lenb + 1];
-		}	
+		}
+
 		for (i = 0; i <= lenb; i++)
 		{
 			dp[0][i] = i;
 		}
+
 		for (i = 0; i <= lena; i++)
 		{
 			dp[i][0] = i;
-		}	
+		}
+
 		for (i = 1; i <= lena; i++)
 		{
 			for (int j = 1; j <= lenb; j++)
@@ -66,15 +71,19 @@ namespace Booker{
 					min(dp[i - 1][j] + 1, dp[i][j - 1] + 1) : dp[i - 1][j - 1] + cost;
 			}
 		}
+
 		int result = dp[lena][lenb];
+
 		for (i = 0; i <= lena; i++)
 		{
 			delete [] dp[i];
-		}	
-		delete [] dp;	
+		}
+
+		delete [] dp;
+
 		return result;
 	}
-	
+
 	//Accout搜索记录
 	bool SearchRecordCondition(const Datastore::Record* record)
 	{
@@ -111,7 +120,7 @@ namespace Booker{
 		}
 	}
 
-///外部InterFace
+	///外部InterFace
 	//增加图书
 	bool AddBook(string Isbn, string Name, string Author, string Publisher, int Num)
 	{
@@ -135,7 +144,7 @@ namespace Booker{
 				Datastore::InsertOrUpdate(book[0]);
 				return true;
 			}
-			
+
 			Datastore::Book *books = Datastore::Create<Datastore::Book>();
 			strcpy(books->Name, &Name[0]);
 			strcpy(books->Isbn, &Isbn[0]);
@@ -153,7 +162,7 @@ namespace Booker{
 			return false;
 		}
 	}
-	
+
 	//删除图书
 	bool DeleteBook(string Isbn, int Num)
 	{
@@ -188,10 +197,9 @@ namespace Booker{
 			book = NULL;
 			return true;
 		}
-
 		return false;
 	}
-	
+
 	//更改Name
 	bool ChangeBookName(string Isbn, string Name)
 	{
@@ -209,7 +217,7 @@ namespace Booker{
 
 		return false;
 	}
-	
+
 	//更改Author
 	bool ChangeBookAuthor(string Isbn, string Author)
 	{
@@ -227,7 +235,7 @@ namespace Booker{
 
 		return false;
 	}
-	
+
 	//更改Publisher
 	bool ChangeBookPublisher(string Isbn, string Publisher)
 	{
@@ -270,13 +278,13 @@ namespace Booker{
 
 		return book;
 	}
-	
+
 	//Account查找记录
 	Datastore::Record** AccountFindRecord(string Account)
 	{
 		Temp = Account;
 		Datastore::User **user = Datastore::Selects<Datastore::User>(SearchUserCondition);
-		
+
 		if (user[0] != NULL)
 		{
 			UserIndex = user[0]->Index;
@@ -319,7 +327,7 @@ namespace Booker{
 
 		return false;
 	}
-	
+
 	//归还图书
 	int ReturnBook(string Account, string Isbn)
 	{
@@ -344,6 +352,7 @@ namespace Booker{
 			{
 				record[i]->IsReturned = true;
 				Datastore::InsertOrUpdate(record[i]);
+
 				if ((double)(clock() - record[i]->Datetime) / CLOCKS_PER_SEC > 30 * 86400)
 				{
 					return -1;
