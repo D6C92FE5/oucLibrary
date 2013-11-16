@@ -20,7 +20,7 @@ int menuTag = 1;
 * 1 游客菜单
 * 2 普通用户菜单
 * 3 管理员菜单
-* 22 用户修改个人信息菜单
+* 22 修改用户信息菜单
 * 33 修改书目信息菜单 
 *  
 * 0 退出系统
@@ -298,7 +298,7 @@ void visitorMenu(){
 		searchBooks();
 		break;
 	case 2:
-		login(Login);
+		login(UserManager::Login);
 		break;
 	case 3:
 		menuTag = 0;
@@ -308,7 +308,7 @@ void visitorMenu(){
 	}
 }
 
-//用户修改个人信息菜单
+//修改用户信息菜单
 void userInfoChangeMenu(){
 	int choice = 0;
 	string newInfo;
@@ -316,8 +316,8 @@ void userInfoChangeMenu(){
 	bool isUser = IUser != NULL && strcmp(IUser->Type, "用户") == 0;
 	string userName;
 	string userInfoItems[3] = {NULL, "密码", "Info"};
-	void (*changFunc[3])(string) = {NULL, UpdataOnesPassword, UpdataOnesInfo};
-	void (*changFunc2[3])(string, string) = {NULL, UpdataUserPassword, UpdataUserInfo};
+	void (*changFunc[3])(string) = {NULL, UserManager::UpdataOnesPassword, UserManager::UpdataOnesInfo};
+	void (*changFunc2[3])(string, string) = {NULL, UserManager::UpdataUserPassword, UserManager::UpdataUserInfo};
 	printUserInfoChangeMenu();
 	choice = getInputPosNum(3);
 	switch (choice)
@@ -348,7 +348,7 @@ void userInfoChangeMenu(){
 			}
 			changFunc2[choice](userName, newInfo);
 		}
-		
+
 		break;
 	default:
 		break;
@@ -386,7 +386,8 @@ void bookInfoChangeMenu(){
 	string newInfo;
 	int maxLength = 0;
 	string bookInfoItems[5] = {NULL, "书名", "作者", "出版社", "ISBN"};
-	bool (*changeFunc[5])(string,string) = {NULL, ChangeBookName, ChangeBookAuthor, ChangeBookPublisher, ChangeBookIsbn};
+	bool (*changeFunc[5])(string,string) = {NULL, Booker::ChangeBookName, 
+		Booker::ChangeBookAuthor, Booker::ChangeBookPublisher, Booker::ChangeBookIsbn};
 	printBookInfoChangeMenu();
 	choice = getInputPosNum(5);
 	switch (choice)
@@ -421,6 +422,89 @@ void bookInfoChangeMenu(){
 	}
 }
 
+//删书
+void deleteBook(){
+	string isbn;
+	int num;
+	print("要删除的图书ISBN：");
+	isbn = getInputIsbn();
+	print("要删除的数量：");
+	num = getInputPosNum();
+	Booker::DeleteBook(isbn, num);
+}
+
+//添加新书
+void addBook(){
+	string isbn;
+	int num;
+	string name;
+	string publisher;
+	string author;
+	print("要添加的图书ISBN：");
+	isbn = getInputIsbn();
+	print("要添加的数量：");
+	num = getInputPosNum();
+	print("要添加的图书名称（如已存在则以馆藏名为准）：");
+	name = getInputString(LEN_BOOK_NAME);
+	print("要添加的图书作者（如已存在则以馆藏名为准）：");
+	author = getInputString(LEN_BOOK_AUTHOR);
+	print("要添加的图书出版社（如已存在则以馆藏名为准）：");
+	publisher = getInputString(LEN_BOOK_PUBLISHER);
+	Booker::AddBook(isbn,name,author,publisher,num);
+}
+
+//注册用户
+void signUp(){
+	string name;
+	string pwd;
+	string pwd2;
+	print("用户名：");
+	name = getInputString(LEN_USER_NAME);
+	print("密码：");
+	pwd = getInputString(LEN_USER_PASSWORD);
+	print("确认密码：");
+	pwd2 = getInputString(LEN_USER_PASSWORD);
+	if(strcmp(pwd.c_str(), pwd2.c_str()) == 0){
+		UserManager::InsertUser(name, pwd);
+		printLine("注册成功！");
+	}
+}
+
+//搜索用户
+void searchUser(){
+	string name;
+	Datastore::User *user;
+	print("要搜索的用户名：");
+	name = getInputString(LEN_USER_NAME);
+	user = UserManager::SelectUser(name);
+	cout << "用户名：" << user->Name << " 用户类型：" << user->Type << " INFO：" << user->Info << endl;
+}
+
+//借书
+void borrowOrReturn(){
+	string userName;
+	string isbn;
+	print("借阅用户：");
+	userName = getInputString(LEN_USER_NAME);
+	print("图书ISBN：");
+	isbn = getInputIsbn();
+	if(BrowseBook(userName, isbn)){
+		printLine("借阅成功！");
+	}else{
+		printLine("借阅失败！请检查用户名以及图书信息是否允许借阅。");
+	}
+}
+
+//还书
+void returnBook(){
+	string userName;
+	string isbn;
+	print("借阅用户：");
+	userName = getInputString(LEN_USER_NAME);
+	print("图书ISBN：");
+	isbn = getInputIsbn();
+}
+
 //管理员菜单
 void adminMenu(){
 	int choice = 0;
@@ -431,16 +515,28 @@ void adminMenu(){
 	case 1:
 		searchBooks();
 		break;
-	case 2:break;
-	case 3:break;
-	case 4:break;
+	case 2:
+		deleteBook();
+		break;
+	case 3:
+		menuTag = 33;
+		break;
+	case 4:
+		addBook();
+		break;
 	case 5:break;
 	case 6:break;
 	case 7:break;
-	case 8:break;
+	case 8:
+		searchUser();
+		break;
 	case 9:break;
-	case 10:break;
-	case 11:break;
+	case 10:
+		menuTag = 22;
+		break;
+	case 11:
+		signUp();
+		break;
 	case 12:
 		menuTag = 1;
 		break;
