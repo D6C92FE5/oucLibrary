@@ -67,7 +67,7 @@ namespace Booker{
 			for (int j = 1; j <= lenb; j++)
 			{
 				int cost = a[i - 1] == b[j - 1] ? 0 : 1;
-				dp[i][j] = min(dp[i - 1][j] + 1, dp[i][j - 1] + 1) < dp[i - 1][j - 1] + cost ? 
+				dp[i][j] = min(dp[i - 1][j] + 1, dp[i][j - 1] + 1) < dp[i - 1][j - 1] + cost ?
 					min(dp[i - 1][j] + 1, dp[i][j - 1] + 1) : dp[i - 1][j - 1] + cost;
 			}
 		}
@@ -76,10 +76,10 @@ namespace Booker{
 
 		for (i = 0; i <= lena; i++)
 		{
-			delete [] dp[i];
+			delete[] dp[i];
 		}
 
-		delete [] dp;
+		delete[] dp;
 
 		return result;
 	}
@@ -108,8 +108,8 @@ namespace Booker{
 			UserIndex = user[0]->Index;
 			BookIndex = book[0]->Index;
 			Datastore::Record **record = Datastore::Selects<Datastore::Record>(AnotherSearchRecordCondition);
-			delete [] user;
-			delete [] book;
+			delete[] user;
+			delete[] book;
 			book = NULL;
 			user = NULL;
 			return record;
@@ -174,7 +174,7 @@ namespace Booker{
 			book[0]->Remain -= Num;
 			book[0]->Total -= Num;
 			Datastore::InsertOrUpdate(book[0]);
-			delete [] book;
+			delete[] book;
 			book = NULL;
 			return true;
 		}
@@ -193,7 +193,7 @@ namespace Booker{
 		{
 			strcpy(book[0]->Isbn, &Isbn[0]);
 			Datastore::InsertOrUpdate(book[0]);
-			delete [] book;
+			delete[] book;
 			book = NULL;
 			return true;
 		}
@@ -210,7 +210,7 @@ namespace Booker{
 		{
 			strcpy(book[0]->Name, &Name[0]);
 			Datastore::InsertOrUpdate(book[0]);
-			delete [] book;
+			delete[] book;
 			book = NULL;
 			return true;
 		}
@@ -228,7 +228,7 @@ namespace Booker{
 		{
 			strcpy(book[0]->Publisher, &Author[0]);
 			Datastore::InsertOrUpdate(book[0]);
-			delete [] book;
+			delete[] book;
 			book = NULL;
 			return true;
 		}
@@ -246,7 +246,7 @@ namespace Booker{
 		{
 			strcpy(book[0]->Publisher, &Publisher[0]);
 			Datastore::InsertOrUpdate(book[0]);
-			delete [] book;
+			delete[] book;
 			book = NULL;
 			return true;
 		}
@@ -289,8 +289,8 @@ namespace Booker{
 		{
 			UserIndex = user[0]->Index;
 			Datastore::Record **record = Datastore::Selects<Datastore::Record>(AnotherSearchRecordCondition);
-			delete [] user;
-			user= NULL;
+			delete[] user;
+			user = NULL;
 			return record;
 		}
 		else
@@ -318,8 +318,8 @@ namespace Booker{
 			record->Datetime = clock();
 			record->IsReturned = false;
 			Datastore::InsertOrUpdate(record);
-			delete [] user;
-			delete [] book;
+			delete[] user;
+			delete[] book;
 			book = NULL;
 			user = NULL;
 			return true;
@@ -345,7 +345,6 @@ namespace Booker{
 		delete[] book;
 		book = NULL;
 		user = NULL;
-
 		for (int i = 0; record[i] != NULL; i++)
 		{
 			if (record[i]->IsReturned = false)

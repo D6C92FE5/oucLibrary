@@ -62,7 +62,7 @@ namespace Booker{
 	//借书
 	bool BrowseBook(string Account, string Isbn);
 	
-	//1正常还书,-1超期还书,0还书失败
+	//1正常还书,0超期还书,-1还书失败
 	int ReturnBook(string Account, string Isbn);
 
 	//Account查找记录
