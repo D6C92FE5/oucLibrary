@@ -15,6 +15,8 @@ namespace UserManager
 	{
 		IUser = new Datastore::User;
 		char name[LEN_USER_NAME], password[LEN_USER_PASSWORD];
+		memset(password, 0, sizeof(password));
+		memset(name, 0, sizeof(name));
 		for (int i = 0; Name[i] != 0; i++){ name[i] = Name[i]; }
 		for (int i = 0; Password[i] != 0; i++){ password[i] = Password[i]; }
 		strcpy(IUser->Name, name);
@@ -22,7 +24,8 @@ namespace UserManager
 			return user->Name == Name;
 		});
 		if (user == NULL) return false;
-		if (strcmp(user->Password, password) == 0){
+		bool flag = strcmp(user->Password, password);
+		if ( !flag ){
 			Type = user->Type;
 			IUser->Index = user->Index;
 			IUser->IsDeleted = user->IsDeleted;
@@ -30,10 +33,12 @@ namespace UserManager
 			strcpy(IUser->Password, user->Password);
 			strcpy(IUser->Type, user->Type);
 			delete user;
+			user = NULL;
 			return true;
 		}
 		else strcpy(IUser->Name, "");
 		delete user;
+		user = NULL;
 		return false;
 	}
 
