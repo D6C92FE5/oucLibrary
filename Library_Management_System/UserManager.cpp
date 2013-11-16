@@ -13,14 +13,16 @@ namespace UserManager
 {
 	bool Login(string Name, string Password)
 	{
-		char name[LEN_USER_NAME];
+		IUser = new Datastore::User;
+		char name[LEN_USER_NAME], password[LEN_USER_PASSWORD];
 		for (int i = 0; Name[i] != 0; i++){ name[i] = Name[i]; }
+		for (int i = 0; Password[i] != 0; i++){ password[i] = Password[i]; }
 		strcpy(IUser->Name, name);
 		auto user = Datastore::Select<Datastore::User>([Name](const Datastore::User* user) {
 			return user->Name==Name;
 		});
-		//if (User[1] != NULL) return false;
-		if (user->Name == Name && user->Password == Password){
+		if (user == NULL) return false;
+		if (strcmp(user->Password,password)){
 			Type = user->Type;
 			IUser->Index = user->Index;
 			IUser->IsDeleted = user->IsDeleted;
@@ -38,6 +40,7 @@ namespace UserManager
 
 	void Logout()
 	{ 
+		delete IUser;
 		IUser=NULL;
 		Type.clear();
 	}

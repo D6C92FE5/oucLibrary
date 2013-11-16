@@ -168,7 +168,7 @@ string getInputPassword(){
 int getInputPosNum(int maxNum = 0){
 	int num = -1;
 	string input;
-	while(num < 0 || cin <= 0){
+	while(num < 0 || cin.bad() <= 0){
 		input = getInputString();
 		if(!allNumric(input.c_str())){
 			printWrongTypeWarning();
