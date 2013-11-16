@@ -18,7 +18,8 @@ int menuTag = 1;
 * 1 游客菜单
 * 2 普通用户菜单
 * 3 管理员菜单
-* 22 修改个人信息菜单
+* 22 用户修改个人信息菜单
+* 23 管理员修改用户信息菜单
 * 33 修改书目信息菜单 
 *  
 * 0 退出系统
@@ -46,7 +47,7 @@ void printVisitorMenu(){
 	printLine();
 }
 
-//打印普通用户菜单
+//打印用户菜单
 void printUserMenu(){
 	printLine("---------菜单---------");
 	printLine("1.检索书目");
@@ -77,9 +78,9 @@ void printAdminMenu(){
 	printLine();
 }
 
-//打印修改个人信息菜单
+//打印修改用户信息菜单
 void printUserInfoChangeMenu(){
-	printLine("-----修改个人信息-----");
+	printLine("-----修改用户信息-----");
 	printLine("1.修改密码");
 	printLine("2.修改简介");
 	printLine("3.返回");
@@ -266,10 +267,12 @@ void login(bool (*f)(string, string)){
 	}else{
 		printLine();
 		printLine("欢迎回来！");
-		if(IUser->Type != "管理员"){
+		if(strcmp(IUser->Type, "用户") == 0){
 			menuTag = 2;
-		}else {
+		}else if(strcmp(IUser->Type, "管理员") == 0){
 			menuTag = 3;
+		}else {
+			menuTag = 1;
 		}
 	}
 }
@@ -302,27 +305,32 @@ void visitorMenu(){
 	}
 }
 
-//修改个人信息菜单
-void UserInfoChangeMenu(){
+//用户修改个人信息菜单
+void userInfoChangeByUserMenu(){
 	int choice = 0;
 	string newInfo;
 	string userName;
+	string userInfoItems[3] = {NULL, "密码", "Info"};
+	void (*changFunc[3])(string) = {NULL, UpdataOnesPassword, UpdataOnesInfo};
 	printUserInfoChangeMenu();
 	choice = getInputPosNum(3);
 	switch (choice)
 	{
 	case 1:
-		if(IUser != NULL && IUser->Type == "管理员"){
-			print("请输入要修改用户的用户名：");
-			userName = getInputString();
-		}else {
-			userName = IUser->Name;
-		}
-		print("请输入新密码：");
-		newInfo = getInputPassword();
-		UpdataUserPassword(userName, newInfo);
-		break;
 	case 2:
+		if(IUser != NULL && strcmp(IUser->Type, "用户") == 0){
+			userName = IUser->Name;
+		}else {
+			menuTag = 1;
+			break;
+		}
+		cout << "请输入新" << userInfoItems[choice] << "：";
+		if(choice == 1){
+			newInfo = getInputPassword();
+		}else {
+			newInfo = getInputString(LEN_USER_INFO);
+		}
+		changFunc[choice](newInfo);
 		break;
 	default:
 		break;
@@ -460,23 +468,24 @@ int main(){
 			visitorMenu();
 			break;
 		case 2:
-			if(IUser != NULL && IUser->Type == "用户"){
+			if(IUser != NULL && strcmp(IUser->Type, "用户") == 0){
 				normalMenu();
 			}else{
 				menuTag = 1;
 			}
 			break;
 		case 3:
-			if(IUser != NULL && IUser->Type == "管理员"){
+			if(IUser != NULL && strcmp(IUser->Type, "管理员") == 0){
 				adminMenu();
 			}else{
 				menuTag = 1;
 			}
 			break;
 		case 22:
-			UserInfoChangeMenu();
+			userInfoChangeByUserMenu();
 			break;
 		case 33:
+			userInfoChangeByAdminMenu();
 			break;
 		case 0:
 			break;
