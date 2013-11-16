@@ -2,11 +2,13 @@
 #include "booker.h"
 #include <stdlib.h>
 #include <fstream>
+#include<iostream>
 #include <conio.h>
 #include <iomanip>
 
 using namespace UserManager;
 using namespace Booker;
+using namespace std;
 
 /*
 *“记录下一步将要进入的菜单”标志位
@@ -19,7 +21,6 @@ int menuTag = 1;
 * 2 普通用户菜单
 * 3 管理员菜单
 * 22 用户修改个人信息菜单
-* 23 管理员修改用户信息菜单
 * 33 修改书目信息菜单 
 *  
 * 0 退出系统
@@ -71,7 +72,7 @@ void printAdminMenu(){
 	printLine("-------用户管理-------");
 	printLine("8.检索用户");
 	printLine("9.移除用户");
-	printLine("10.重置用户密码");
+	printLine("10.修改用户信息");
 	printLine("11.注册新用户");
 	printLine("12.注销");
 	printLine("----------------------");
@@ -195,7 +196,7 @@ string getInputPassword(){
 }
 
 //重复请求一个正整数输入，直到输入正确，参数指定上限，默认没有
-int getInputPosNum(int maxNum = 0){
+long long int getInputPosNum(int maxNum = 0){
 	long long int num = -1;
 	string input;
 	while(num < 0 || cin.bad() > 0){
@@ -260,6 +261,8 @@ void login(bool (*f)(string, string)){
 	print("用户名：");
 	userName = getInputString(LEN_USER_NAME);
 	pwd = getInputPassword();
+	printLine();
+	cout << "输入的用户名和密码分别是：" << userName << "|" << pwd << endl;
 	if(!f(userName, pwd)){
 		printLine();
 		printLine("用户名/密码错误！");
@@ -306,31 +309,46 @@ void visitorMenu(){
 }
 
 //用户修改个人信息菜单
-void userInfoChangeByUserMenu(){
+void userInfoChangeMenu(){
 	int choice = 0;
 	string newInfo;
+	bool isAdmin = IUser != NULL && strcmp(IUser->Type, "管理员") == 0;
+	bool isUser = IUser != NULL && strcmp(IUser->Type, "用户") == 0;
 	string userName;
 	string userInfoItems[3] = {NULL, "密码", "Info"};
 	void (*changFunc[3])(string) = {NULL, UpdataOnesPassword, UpdataOnesInfo};
+	void (*changFunc2[3])(string, string) = {NULL, UpdataUserPassword, UpdataUserInfo};
 	printUserInfoChangeMenu();
 	choice = getInputPosNum(3);
 	switch (choice)
 	{
 	case 1:
-	case 2:  
-		if(IUser != NULL && strcmp(IUser->Type, "用户") == 0){
+	case 2:
+		if(isAdmin){
+			userName = getInputString(LEN_USER_NAME);
+		}else if(isUser){
 			userName = IUser->Name;
 		}else {
 			menuTag = 1;
 			break;
 		}
 		cout << "请输入新" << userInfoItems[choice] << "：";
-		if(choice == 1){
-			newInfo = getInputPassword();
-		}else {
-			newInfo = getInputString(LEN_USER_INFO);
+		if(isUser){
+			if(choice == 1){
+				newInfo = getInputPassword();
+			}else {
+				newInfo = getInputString(LEN_USER_INFO);
+			}
+			changFunc[choice](newInfo);
+		}else if(isAdmin){
+			if(choice == 1){
+				newInfo = getInputPassword();
+			}else {
+				newInfo = getInputString(LEN_USER_INFO);
+			}
+			changFunc2[choice](userName, newInfo);
 		}
-		changFunc[choice](newInfo);
+		
 		break;
 	default:
 		break;
@@ -482,10 +500,9 @@ int main(){
 			}
 			break;
 		case 22:
-			userInfoChangeByUserMenu();
+			userInfoChangeMenu();
 			break;
 		case 33:
-			userInfoChangeByAdminMenu();
 			break;
 		case 0:
 			break;
