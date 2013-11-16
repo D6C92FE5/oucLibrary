@@ -481,14 +481,14 @@ void searchUser(){
 }
 
 //借书
-void borrowOrReturn(){
+void borrowBook(){
 	string userName;
 	string isbn;
 	print("借阅用户：");
 	userName = getInputString(LEN_USER_NAME);
 	print("图书ISBN：");
 	isbn = getInputIsbn();
-	if(BrowseBook(userName, isbn)){
+	if(Booker::BrowseBook(userName, isbn)){
 		printLine("借阅成功！");
 	}else{
 		printLine("借阅失败！请检查用户名以及图书信息是否允许借阅。");
@@ -503,6 +503,14 @@ void returnBook(){
 	userName = getInputString(LEN_USER_NAME);
 	print("图书ISBN：");
 	isbn = getInputIsbn();
+	int t = Booker::ReturnBook(userName, isbn);
+	if(t == 0){
+		printLine("还书成功！未超期");
+	}else if(t == -1){
+		printLine("还书失败！请检查借阅信息是否存在。");
+	}else{
+		cout << "还书成功！超期" << t << "天！";
+	}
 }
 
 //管理员菜单
@@ -524,8 +532,12 @@ void adminMenu(){
 	case 4:
 		addBook();
 		break;
-	case 5:break;
-	case 6:break;
+	case 5:
+		borrowBook();
+		break;
+	case 6:
+		returnBook();
+		break;
 	case 7:break;
 	case 8:
 		searchUser();
