@@ -341,8 +341,8 @@ namespace Booker{
 
 		Datastore::Record **record = IsbnFindRecord(Account, Isbn);
 
-		delete [] user;
-		delete [] book;
+		delete[] user;
+		delete[] book;
 		book = NULL;
 		user = NULL;
 
@@ -352,16 +352,18 @@ namespace Booker{
 			{
 				record[i]->IsReturned = true;
 				Datastore::InsertOrUpdate(record[i]);
-
-				if ((double)(clock() - record[i]->Datetime) / CLOCKS_PER_SEC > 30 * 86400)
+				int BorrowTime = (double)(clock() - record[i]->Datetime) / CLOCKS_PER_SEC;
+				if (BorrowTime <= 30 * 86400)
 				{
-					return -1;
+					return 0;
 				}
-
-				return 1;
+				else{
+					int Day = BorrowTime / 86400 - 30;
+					return Day;
+				}
 			}
 		}
 
-		return 0;
+		return -1;
 	}
 }

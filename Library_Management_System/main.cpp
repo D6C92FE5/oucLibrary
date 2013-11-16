@@ -54,7 +54,8 @@ void printUserMenu(){
 	printLine("1.检索书目");
 	printLine("2.修改个人信息");
 	printLine("3.权限提升（管理员）");
-	printLine("4.注销");
+	printLine("4.查看借阅记录");
+	printLine("5.注销");
 	printLine("----------------------");
 	printLine();
 }
@@ -355,6 +356,17 @@ void userInfoChangeMenu(){
 	}
 }
 
+//查看用户借阅记录
+void borrowRecord(){
+	Datastore::Record** record;
+	record = Booker::AccountFindRecord(IUser->Name);
+	int i = 0;
+	if(record == NULL){
+		printLine("暂无记录！");
+		return;
+	}
+}
+
 //普通用户菜单
 void normalMenu(){
 	int choice = 0;
@@ -372,6 +384,9 @@ void normalMenu(){
 		login(UpLevel);
 		break;
 	case 4:
+
+		break;
+	case 5:
 		menuTag = 1;
 		break;
 	default:
