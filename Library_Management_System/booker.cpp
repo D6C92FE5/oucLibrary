@@ -369,6 +369,7 @@ namespace Booker{
 
 		return -1;
 	}
+
 	bool RenewBook(string Account, string Isbn)
 	{
 		auto user = Datastore::Select<Datastore::User>([Account](const Datastore::User* user) {
