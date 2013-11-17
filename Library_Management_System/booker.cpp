@@ -424,4 +424,13 @@ namespace Booker{
 
 		}
 	}
+
+	//Index≤È’“Õº È
+	Datastore::Book* IndexFindBook(int Index)
+	{
+		auto book = Datastore::Select<Datastore::Book>([Index](const Datastore::Book* book) {
+			return book->Index==Index;
+		});
+		return book;
+	}
 }
