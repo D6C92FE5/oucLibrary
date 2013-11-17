@@ -317,6 +317,8 @@ namespace Booker{
 			record->BookIndex = book[0]->Index;
 			record->Datetime = time(0);
 			record->IsReturned = false;
+			record->IsRenew = false;
+			record->IsDeleted = false;
 			Datastore::InsertOrUpdate(record);
 			delete[] user;
 			delete[] book;
@@ -353,16 +355,48 @@ namespace Booker{
 				Datastore::InsertOrUpdate(record[i]);
 				int Time = time(0) - record[i]->Datetime;
 				int Day = Time / 86400;
-				if (Day <= 30)
+				int BD = 30;//½èÊéÆÚÏÞ
+				if (record[i]->IsRenew == true)BD = 60;
+				if (Day <= BD)
 				{
 					return 0;
 				}
 				else{
-					return (Day - 30);
+					return (Day - BD);
 				}
 			}
 		}
 
 		return -1;
+	}
+	bool RenewBook(string Account, string Isbn)
+	{
+		auto user = Datastore::Select<Datastore::User>([Account](const Datastore::User* user) {
+			return user->Name == Account;
+		});
+		auto book = Datastore::Select<Datastore::Book>([Isbn](const Datastore::Book* book) {
+			return book->Isbn == Isbn;
+		});
+		if (user == NULL || book == NULL)return false;
+		else {
+			book->Remain--;
+			int BookIndex = book->Index;
+			int UserIndex = user->Index;
+			Datastore::InsertOrUpdate(book);
+			auto record = Datastore::Selects<Datastore::Record>(
+				[BookIndex, UserIndex](const Datastore::Record* record){
+				bool flag = (record->BookIndex == BookIndex && record->UserIndex == UserIndex)
+					&& !record->IsReturned && !record->IsRenew;
+				return flag;
+			});
+			if (record[0] == NULL)return false;
+			int Time = time(0) - record[0]->Datetime;
+			if (record[0]->IsRenew == false && record[0]->IsReturned == false && ){ 
+				; 
+			}
+
+		}
+
+
 	}
 }

@@ -65,6 +65,10 @@ namespace Booker{
 	//1正常还书,0超期还书,-1还书失败
 	int ReturnBook(string Account, string Isbn);
 
+	//续借
+	//超时不能续借，用户名或书ISBN错误不能续借，已续借不能续借，已还不能续借
+	bool RenewBook(string Account, string Isbn);
+
 	//Account查找记录
 	Datastore::Record** AccountFindRecord(string Account);
 }
