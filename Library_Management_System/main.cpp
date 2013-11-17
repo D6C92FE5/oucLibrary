@@ -478,6 +478,21 @@ void deleteBook(){
 	Booker::DeleteBook(isbn, num);
 }
 
+void deleteUser(){
+	string name;
+	string name2;
+	print("要删除用户的用户名：");
+	name = getInputIsbn();
+	print("确认要删除用户的用户名：");
+	name2 = getInputIsbn();
+	if(strcmp(name.c_str(), name2.c_str()) != 0){
+		printLine("两次用户名不一致，不执行删除操作，返回。");
+		return;
+	}else if(confirm()){
+		UserManager::DeleteUser(name);
+	}
+}
+
 //添加新书
 void addBook(){
 	string isbn;
@@ -590,7 +605,8 @@ void adminMenu(){
 	case 8:
 		searchUser();
 		break;
-	case 9:break;
+	case 9:
+		break;
 	case 10:
 		menuTag = 22;
 		break;
