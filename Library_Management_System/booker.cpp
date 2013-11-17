@@ -315,7 +315,7 @@ namespace Booker{
 			Datastore::Record *record = new Datastore::Record;
 			record->UserIndex = user[0]->Index;
 			record->BookIndex = book[0]->Index;
-			record->Datetime = clock();
+			record->Datetime = time(0);
 			record->IsReturned = false;
 			Datastore::InsertOrUpdate(record);
 			delete[] user;
@@ -351,14 +351,14 @@ namespace Booker{
 			{
 				record[i]->IsReturned = true;
 				Datastore::InsertOrUpdate(record[i]);
-				int BorrowTime = (double)(clock() - record[i]->Datetime) / CLOCKS_PER_SEC;
-				if (BorrowTime <= 30 * 86400)
+				int Time = time(0) - record[i]->Datetime;
+				int Day = Time / 86400;
+				if (Day <= 30)
 				{
 					return 0;
 				}
 				else{
-					int Day = BorrowTime / 86400 - 30;
-					return Day;
+					return (Day - 30);
 				}
 			}
 		}
