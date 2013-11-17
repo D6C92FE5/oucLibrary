@@ -55,6 +55,9 @@ namespace Booker{
 	
 	//Isbn查找图书
 	Datastore::Book** IsbnFindBook(string Isbn);
+
+	//Index查找图书
+	Datastore::Book* IndexFindBook(int Index);
 	
 	//Anything查找图书
 	Datastore::Book** AnythingFindBook(string Anything);
