@@ -377,8 +377,15 @@ namespace Booker{
 		auto book = Datastore::Select<Datastore::Book>([Isbn](const Datastore::Book* book) {
 			return book->Isbn == Isbn;
 		});
-		if (user == NULL || book == NULL)return false;
-		else {
+		if (user == NULL || book == NULL){
+			delete user;
+			delete book;
+			user = NULL;
+			book = NULL;
+			return false;
+		}
+		else
+		{
 			book->Remain--;
 			int BookIndex = book->Index;
 			int UserIndex = user->Index;
@@ -389,14 +396,31 @@ namespace Booker{
 					&& !record->IsReturned && !record->IsRenew;
 				return flag;
 			});
-			if (record[0] == NULL)return false;
-			int Time = time(0) - record[0]->Datetime;
-			if (record[0]->IsRenew == false && record[0]->IsReturned == false && ){ 
-				; 
+			int num = 0;
+			if (record[num] == NULL){
+				delete user;
+				delete book;
+				user = NULL;
+				book = NULL;
+				return false;
 			}
+			int Time = time(0) - record[0]->Datetime;
+			Time /= 86400;
+			while (record[num] != NULL)
+			{
+				if (record[num]->IsRenew == false && record[num]->IsReturned == false && (Time <= 30)){
+					record[num]->IsRenew = true;
+					Datastore::InsertOrUpdate(record[num]);
+					return true;
+				}
+				else num++;
+			}
+			delete user;
+			delete book;
+			user = NULL;
+			book = NULL;
+			return false;
 
 		}
-
-
 	}
 }

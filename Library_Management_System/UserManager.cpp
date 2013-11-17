@@ -94,6 +94,7 @@ namespace UserManager
 		char info[LEN_USER_INFO];
 		for (int i = 0; Name[i] != 0; i++){ name[i] = Name[i]; }
 		for (int i = 0; Password[i] != 0; i++){ password[i] = Password[i]; }
+		
 		strcpy(user->Name, name);
 		strcpy(user->Password, password);
 		strcpy(user->Info, info);
