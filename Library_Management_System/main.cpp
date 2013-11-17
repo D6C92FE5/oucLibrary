@@ -125,7 +125,7 @@ void printBookList(Datastore::Book** list){
 void printRecordList(Datastore::Record** list){
 	int i = 0;
 	if(list[0] == NULL){
-		printLine("找不到相关图书！");
+		printLine("暂无记录！");
 		return;
 	}
 
@@ -430,7 +430,7 @@ void bookInfoChangeMenu(){
 	string bookIsbn;
 	string newInfo;
 	int maxLength = 0;
-	string bookInfoItems[5] = {NULL, "书名", "作者", "出版社", "ISBN"};
+	string bookInfoItems[5] = {"", "书名", "作者", "出版社", "ISBN"};
 	bool (*changeFunc[5])(string,string) = {NULL, Booker::ChangeBookName, 
 		Booker::ChangeBookAuthor, Booker::ChangeBookPublisher, Booker::ChangeBookIsbn};
 	printBookInfoChangeMenu();
@@ -478,6 +478,7 @@ void deleteBook(){
 	Booker::DeleteBook(isbn, num);
 }
 
+//删除用户
 void deleteUser(){
 	string name;
 	string name2;
@@ -606,6 +607,7 @@ void adminMenu(){
 		searchUser();
 		break;
 	case 9:
+		deleteUser();
 		break;
 	case 10:
 		menuTag = 22;
@@ -672,6 +674,7 @@ int main(){
 			userInfoChangeMenu();
 			break;
 		case 33:
+			bookInfoChangeMenu();
 			break;
 		case 0:
 			break;
