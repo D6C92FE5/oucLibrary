@@ -110,6 +110,7 @@ void printBookList(Datastore::Book** list){
 	int i = 0;
 	if(list[0] == NULL){
 		printLine("找不到相关图书！");
+		return;
 	}
 	cout << setw(30) << "书名" << setw(20) << "作者" << setw(30) << "出版社" << setw(15) 
 		<< "ISBN" << setw(10) << "总计" << setw(10) << "可借" << endl;
@@ -119,6 +120,26 @@ void printBookList(Datastore::Book** list){
 		i++;
 	}
 }
+
+Datastore::Book* findBookByIndex(int index){
+	auto book = Datastore::Select<Datastore::Book>([index](const Datastore::Book* book) {
+		return book;
+	});
+}
+
+//打印借阅记录列表
+void printRecordList(Datastore::Record** list){
+	int i = 0;
+	if(list[0] == NULL){
+		printLine("找不到相关图书！");
+		return;
+	}
+	cout << setw(30) << "书名" << setw(15) << "ISBN" << setw(10) << "借阅用户" << setw(10) << "借阅日期" 
+		<< setw(10) << "是否续借" << endl;
+	while(list[i] != NULL){
+	}
+}
+
 
 // 释放搜索结果
 template <typename T>
@@ -263,7 +284,6 @@ void login(bool (*f)(string, string)){
 	userName = getInputString(LEN_USER_NAME);
 	pwd = getInputPassword();
 	printLine();
-	cout << "输入的用户名和密码分别是：" << userName << "|" << pwd << endl;
 	if(!f(userName, pwd)){
 		printLine();
 		printLine("用户名/密码错误！");
@@ -286,6 +306,7 @@ void backToMainMenu(){
 	printLine("错误的选项，将返回主界面！");
 	printLine();
 	menuTag = 1;
+	Logout();
 }
 
 //游客菜单
@@ -316,7 +337,7 @@ void userInfoChangeMenu(){
 	bool isAdmin = IUser != NULL && strcmp(IUser->Type, "管理员") == 0;
 	bool isUser = IUser != NULL && strcmp(IUser->Type, "用户") == 0;
 	string userName;
-	string userInfoItems[3] = {NULL, "密码", "Info"};
+	string userInfoItems[3] = {"", "密码", "Info"};
 	void (*changFunc[3])(string) = {NULL, UserManager::UpdataOnesPassword, UserManager::UpdataOnesInfo};
 	void (*changFunc2[3])(string, string) = {NULL, UserManager::UpdataUserPassword, UserManager::UpdataUserInfo};
 	printUserInfoChangeMenu();
@@ -351,6 +372,13 @@ void userInfoChangeMenu(){
 		}
 
 		break;
+	case 3:
+		if(isAdmin){
+			menuTag = 3;
+		}else {
+			menuTag = 2;
+		}
+		break;
 	default:
 		break;
 	}
@@ -364,6 +392,11 @@ void borrowRecord(){
 	if(record == NULL){
 		printLine("暂无记录！");
 		return;
+	}else{
+		while(record[i] != NULL){
+			
+			i++;
+		}
 	}
 }
 
@@ -371,7 +404,7 @@ void borrowRecord(){
 void normalMenu(){
 	int choice = 0;
 	printUserMenu();
-	choice = getInputPosNum(4);
+	choice = getInputPosNum(5);
 	switch (choice)
 	{
 	case 1:
@@ -390,6 +423,7 @@ void normalMenu(){
 		menuTag = 1;
 		break;
 	default:
+		backToMainMenu();
 		break;
 	}
 }
@@ -496,14 +530,14 @@ void searchUser(){
 }
 
 //借书
-void borrowBook(){
+void borrowBook(bool (*b)(string, string)){
 	string userName;
 	string isbn;
 	print("借阅用户：");
 	userName = getInputString(LEN_USER_NAME);
 	print("图书ISBN：");
 	isbn = getInputIsbn();
-	if(Booker::BrowseBook(userName, isbn)){
+	if(b(userName, isbn)){
 		printLine("借阅成功！");
 	}else{
 		printLine("借阅失败！请检查用户名以及图书信息是否允许借阅。");
@@ -548,12 +582,15 @@ void adminMenu(){
 		addBook();
 		break;
 	case 5:
-		borrowBook();
+		borrowBook(Booker::BrowseBook);
 		break;
 	case 6:
 		returnBook();
 		break;
-	case 7:break;
+	case 7:
+		borrowBook(Booker::RenewBook);
+		break;
+		break;
 	case 8:
 		searchUser();
 		break;
@@ -597,9 +634,6 @@ int __main ()
 
 int main(){
 	Datastore::Init();
-	string s = "" + '\0';
-	int a = s.size();
-	cout << a;
 	visitorMenu();
 	while(menuTag != 0){
 		switch (menuTag)

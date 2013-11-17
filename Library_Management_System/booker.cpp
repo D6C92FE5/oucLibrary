@@ -40,17 +40,28 @@ namespace Booker{
 		return false;
 	}
 
-	//±à¼­¾àÀë,¸¨ÖúËÑË÷£¬kmp
+	//±à¼­¾àÀë,¸¨ÖúËÑË÷
 	int DistanceBetweenThem(string a, string b)
 	{
 		int lena = a.length(), lenb = b.length(), i = 0;
+
 		int **dp = new int*[lena + 1];
+
 		for (i = 0; i <= lena; i++)
+		{
 			dp[i] = new int[lenb + 1];
+		}
+
 		for (i = 0; i <= lenb; i++)
+		{
 			dp[0][i] = i;
+		}
+
 		for (i = 0; i <= lena; i++)
+		{
 			dp[i][0] = i;
+		}
+
 		for (i = 1; i <= lena; i++)
 		{
 			for (int j = 1; j <= lenb; j++)
@@ -60,10 +71,16 @@ namespace Booker{
 					min(dp[i - 1][j] + 1, dp[i][j - 1] + 1) : dp[i - 1][j - 1] + cost;
 			}
 		}
+
 		int result = dp[lena][lenb];
+
 		for (i = 0; i <= lena; i++)
+		{
 			delete[] dp[i];
+		}
+
 		delete[] dp;
+
 		return result;
 	}
 
@@ -76,9 +93,7 @@ namespace Booker{
 	//Account&IsbnËÑË÷¼ÇÂ¼
 	bool AnotherSearchRecordCondition(const Datastore::Record* record)
 	{
-		return (((!(record->UserIndex - UserIndex)) 
-			& (!(record->BookIndex - BookIndex))) 
-			& (!record->IsReturned));
+		return (((!(record->UserIndex - UserIndex)) & (!(record->BookIndex - BookIndex))) & (!record->IsReturned));
 	}
 
 	//Account&Isbn²éÕÒ¼ÇÂ¼
@@ -314,7 +329,7 @@ namespace Booker{
 
 		return false;
 	}
-	
+
 	//¹é»¹Í¼Êé
 	int ReturnBook(string Account, string Isbn)
 	{
@@ -354,8 +369,7 @@ namespace Booker{
 
 		return -1;
 	}
-	
-	//Ğø½è
+
 	bool RenewBook(string Account, string Isbn)
 	{
 		auto user = Datastore::Select<Datastore::User>([Account](const Datastore::User* user) {
@@ -410,15 +424,4 @@ namespace Booker{
 
 		}
 	}
-
-
-	//Index²éÕÒÍ¼Êé
-	Datastore::Book* IndexFindBook(int Index)
-	{
-		auto book = Datastore::Select<Datastore::Book>([Index](const Datastore::Book* book) {
-			return book->Index==Index;
-		});
-		return user;
-	}
-
 }
