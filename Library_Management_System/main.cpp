@@ -121,12 +121,6 @@ void printBookList(Datastore::Book** list){
 	}
 }
 
-Datastore::Book* findBookByIndex(int index){
-	auto book = Datastore::Select<Datastore::Book>([index](const Datastore::Book* book) {
-		return book;
-	});
-}
-
 //打印借阅记录列表
 void printRecordList(Datastore::Record** list){
 	int i = 0;
@@ -134,12 +128,16 @@ void printRecordList(Datastore::Record** list){
 		printLine("找不到相关图书！");
 		return;
 	}
-	cout << setw(30) << "书名" << setw(15) << "ISBN" << setw(10) << "借阅用户" << setw(10) << "借阅日期" 
+
+	cout << setw(30) << "书名" << setw(15) << "ISBN" << setw(10) << "借阅日期" 
 		<< setw(10) << "是否续借" << endl;
 	while(list[i] != NULL){
+		Datastore::Book* book;
+		book = Booker::IndexFindBook(list[i]->BookIndex);
+		cout << setw(30) << book->Name << setw(15) << book->Isbn << setw(10) << list[i]->Datetime 
+			<< setw(10) << list[i]->IsRenew << endl;
 	}
 }
-
 
 // 释放搜索结果
 template <typename T>
@@ -153,7 +151,7 @@ void DestroyArray(T** array) {
 }
 
 //获取一行字符串输入，参数指定最大长度，默认不限
-string getInputString(int maxLength = 0){
+string getInputString(unsigned int maxLength = 0){
 	string input;
 	if(0 == maxLength){
 		getline(cin, input);
@@ -218,15 +216,15 @@ string getInputPassword(){
 }
 
 //重复请求一个正整数输入，直到输入正确，参数指定上限，默认没有
-long long int getInputPosNum(int maxNum = 0){
-	long long int num = -1;
+int getInputPosNum(int maxNum = 0){
+	int num = -1;
 	string input;
-	while(num < 0 || cin.bad() > 0){
-		if(cin.fail() > 0){
-			printLine("程序将退出，请重新启动！");
+	while(num < 0 || cin.bad()){
+		if(cin.fail()){
+			printLine("无法恢复的输入错误，程序将退出，请重新启动！");
 			exit(0);
 		}
-		while(num < 0 || cin.bad() > 0){
+		while(num < 0 || cin.bad()){
 			input = getInputString(15);
 			if(!allNumric(input.c_str())){
 				printWrongTypeWarning();
@@ -239,6 +237,7 @@ long long int getInputPosNum(int maxNum = 0){
 		}
 		return num;
 	}
+	return maxNum;
 }
 
 //重复请求一个合法ISBN输入，直到输入正确
@@ -265,8 +264,8 @@ void searchBooks(){
 
 //不可逆操作确认
 bool confirm(){
-	int n = 3;
-	bool isSure;
+	int n = 4;
+	bool isSure = true;
 	while(n-- && isSure){
 		printLine("该操作不可逆，确定吗？");
 		printLine("1.确定");
@@ -354,11 +353,12 @@ void userInfoChangeMenu(){
 			menuTag = 1;
 			break;
 		}
-		cout << "请输入新" << userInfoItems[choice] << "：";
+		cout << "请输入新" << userInfoItems[choice];
 		if(isUser){
 			if(choice == 1){
 				newInfo = getInputPassword();
 			}else {
+				cout << ":";
 				newInfo = getInputString(LEN_USER_INFO);
 			}
 			changFunc[choice](newInfo);
@@ -388,15 +388,11 @@ void userInfoChangeMenu(){
 void borrowRecord(){
 	Datastore::Record** record;
 	record = Booker::AccountFindRecord(IUser->Name);
-	int i = 0;
 	if(record == NULL){
 		printLine("暂无记录！");
 		return;
 	}else{
-		while(record[i] != NULL){
-			
-			i++;
-		}
+		printRecordList(record);
 	}
 }
 
@@ -417,7 +413,7 @@ void normalMenu(){
 		login(UpLevel);
 		break;
 	case 4:
-
+		borrowRecord();
 		break;
 	case 5:
 		menuTag = 1;
