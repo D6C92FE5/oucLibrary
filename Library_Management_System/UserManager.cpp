@@ -11,6 +11,7 @@ Datastore::User * IUser;
 //维护
 namespace UserManager
 {
+	//登入
 	bool Login(string Name, string Password)
 	{
 		IUser = new Datastore::User;
@@ -42,7 +43,7 @@ namespace UserManager
 		return false;
 	}
 
-
+	//登出
 	void Logout()
 	{
 		delete IUser;
@@ -50,7 +51,7 @@ namespace UserManager
 		Type.clear();
 	}
 
-
+	//用户升级
 	bool UpLevel(string Name, string Password)
 	{
 		UserManager::Logout();
@@ -58,6 +59,7 @@ namespace UserManager
 	}
 	//一般用户
 	//用户成功登入下可用
+	//用户修改密码
 	void UpdataOnesPassword(string Password)
 	{
 		if (Type.size() == 0)return;
@@ -68,6 +70,7 @@ namespace UserManager
 		}
 		Datastore::InsertOrUpdate(IUser);
 	}
+	//用户修改INFO
 	void UpdataOnesInfo(string Info)
 	{
 		if (Type.size() == 0)return;
@@ -84,6 +87,7 @@ namespace UserManager
 	//管理员
 	//所有操作在管理员未登入的情况下无法进行
 	//搜索返回NULL
+	//创建新用户
 	void InsertUser(string Name, string Password)
 	{
 		if (Type != "管理员")return;
@@ -103,6 +107,7 @@ namespace UserManager
 		Datastore::InsertOrUpdate(user);
 		delete user;
 	}
+	//选择用户
 	Datastore::User * SelectUser(string Name)
 	{
 		if (Type != "管理员")return NULL;
@@ -111,6 +116,7 @@ namespace UserManager
 		});
 		return user;
 	}
+	//删除用户
 	void DeleteUser(string Name)
 	{
 		if (Type != "管理员")return;
@@ -120,6 +126,7 @@ namespace UserManager
 		Datastore::Delete<Datastore::User>(user->Index);
 		delete user;
 	}
+	//更新用户密码
 	void UpdataUserPassword(string Name, string Password)
 	{
 		if (Type != "管理员")return;
@@ -133,6 +140,7 @@ namespace UserManager
 			delete user;
 		}
 	}
+	//更新用户INFO
 	void UpdataUserInfo(string Name, string Info)
 	{
 		if (Type != "管理员")return;
