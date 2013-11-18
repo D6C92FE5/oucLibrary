@@ -63,6 +63,7 @@ namespace Datastore {
         if (file == NULL) {
             throw new std::exception("文件打开失败");
         }
+        setvbuf(file, NULL, _IOFBF, (sizeof T) * Config::FILE_READ_CACHE_COUNT);
         return file;
     }
 

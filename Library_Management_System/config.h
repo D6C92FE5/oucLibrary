@@ -39,4 +39,7 @@ namespace Config {
 
     //数据存储文件所在的目录
     extern const char* DATASTORE_PATH;
+
+    //数据存储文件读取缓存，每次读取的记录条数
+    extern const int FILE_READ_CACHE_COUNT;
 }
