@@ -124,7 +124,7 @@ namespace Booker{
 	//Ôö¼ÓÍ¼Êé
 	bool AddBook(string Isbn, string Name, string Author, string Publisher, int Num)
 	{
-		if (Isbn.length() == 13 && Name.length() > 0 && Name.length() < 100 && Author.length() > 0 && Author.length() < 100 && Publisher.length() > 0 && Publisher.length() < 100 && Num > 0)
+		if ((Isbn.length() == 13 || Isbn.length() == 10) && Name.length() > 0 && Name.length() < 100 && Author.length() > 0 && Author.length() < 100 && Publisher.length() > 0 && Publisher.length() < 100 && Num > 0)
 		{
 			for (int i = 0; i < 13; i++)
 			{

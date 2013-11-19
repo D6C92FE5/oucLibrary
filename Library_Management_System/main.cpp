@@ -244,7 +244,7 @@ int getInputPosNum(int maxNum = 0){
 string getInputIsbn(){
 	string input = "";
 	input = getInputString(LEN_BOOK_ISBN);
-	while(isbnCheck(input)){
+	while(!isbnCheck(input)){
 		printWrongTypeWarning();
 		input = getInputString(LEN_BOOK_ISBN);
 	}
