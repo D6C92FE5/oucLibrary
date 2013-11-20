@@ -30,14 +30,21 @@ void printLine(char * content){
 	cout << content << endl;
 }
 
-void print(char * content){
-	cout << content ;
+void printLine(int content){
+	cout << content << endl;
 }
 
 void printLine(){
 	cout << endl;
 }
 
+void print(char * content){
+	cout << content ;
+}
+
+void print(int content){
+	cout << content ;
+}
 //打印游客菜单
 void printVisitorMenu(){
 	printLine("---------菜单---------");
@@ -112,11 +119,22 @@ void printBookList(Datastore::Book** list){
 		printLine("找不到相关图书！");
 		return;
 	}
-	cout << setw(30) << "书名" << setw(20) << "作者" << setw(30) << "出版社" << setw(15) 
-		<< "ISBN" << setw(10) << "总计" << setw(10) << "可借" << endl;
+	printLine("-------------");
 	while(list[i] != NULL){
-		cout << setw(30) << list[i]->Name << setw(20) << list[i]->Author << setw(30) << list[i]->Publisher << setw(15) 
-			<< list[i]->Isbn << setw(10) << list[i]->Total << setw(10) << list[i]->Remain << endl;
+		print("书名：");
+		printLine(list[i]->Name);
+		print("作者：");
+		printLine(list[i]->Author);
+		print("出版社：");
+		printLine(list[i]->Publisher);
+		print("ISBN：");
+		printLine(list[i]->Isbn);
+		print("总计：");
+		print(list[i]->Total);
+		print("可借：");
+		print(list[i]->Remain);
+		printLine();
+		printLine("-------------");
 		i++;
 	}
 }
@@ -128,15 +146,21 @@ void printRecordList(Datastore::Record** list){
 		printLine("暂无记录！");
 		return;
 	}
-
-	cout << setw(30) << "书名" << setw(15) << "ISBN" << setw(10) << "借阅日期" 
-		<< setw(10) << "是否续借" << endl;
+	printLine("---借阅记录--");
 	while(list[i] != NULL){
 		Datastore::Book* book;
 		book = Booker::IndexFindBook(list[i]->BookIndex);
-		cout << setw(30) << book->Name << setw(15) << book->Isbn << setw(10) << ctime(&list[i]->Datetime)
-			<< setw(10) << list[i]->IsRenew << endl;
+		print("书名：");
+		printLine(book->Name);
+		print("ISBN：");
+		printLine(book->Isbn);
+		print("借阅日期：");
+		print(ctime(&list[i]->Datetime));
+		print("可借：");
+		print(list[i]->IsRenew);
+		printLine("-------------");
 		i++;
+		delete book;
 	}
 }
 
@@ -287,7 +311,11 @@ void login(bool (*f)(string, string)){
 	if(!f(userName, pwd)){
 		printLine();
 		printLine("用户名/密码错误！");
-		menuTag = 1;
+		if(strcmp(IUser->Type, "用户") == 0){
+			menuTag = 2;
+		}else{
+			menuTag = 1;
+		}
 	}else{
 		printLine();
 		printLine("欢迎回来！");
@@ -506,13 +534,25 @@ void addBook(){
 	isbn = getInputIsbn();
 	print("要添加的数量：");
 	num = getInputPosNum();
-	print("要添加的图书名称（如已存在则以馆藏名为准）：");
-	name = getInputString(LEN_BOOK_NAME);
-	print("要添加的图书作者（如已存在则以馆藏名为准）：");
-	author = getInputString(LEN_BOOK_AUTHOR);
-	print("要添加的图书出版社（如已存在则以馆藏名为准）：");
-	publisher = getInputString(LEN_BOOK_PUBLISHER);
-	Booker::AddBook(isbn,name,author,publisher,num);
+	Datastore::Book** book;
+	book = Booker::IsbnFindBook(isbn);
+	if(book[0] == NULL){
+		print("要添加的图书名称：");
+		name = getInputString(LEN_BOOK_NAME);
+		print("要添加的图书作者：");
+		author = getInputString(LEN_BOOK_AUTHOR);
+		print("要添加的图书出版社：");
+		publisher = getInputString(LEN_BOOK_PUBLISHER);
+	}else{
+		name = book[0]->Name;
+		author = book[0]->Author;
+		publisher = book[0]->Publisher;
+	}
+	if(Booker::AddBook(isbn,name,author,publisher,num)){
+		printLine("添加成功！");
+		book = Booker::IsbnFindBook(isbn);
+		printBookList(book);
+	}
 }
 
 //注册用户
@@ -652,6 +692,7 @@ int _main()
 	Datastore::Init();
 	return 0;
 }
+
 int main(){
 	Datastore::Init();
 	visitorMenu();
