@@ -77,7 +77,7 @@ namespace UserManager
 		int length = Info.size();
 		for (int i = 0; i < length; i++)
 		{
-			IUser->Password[i] = Info[i];
+			IUser->Info[i] = Info[i];
 		}
 		Datastore::InsertOrUpdate(IUser);
 	}
