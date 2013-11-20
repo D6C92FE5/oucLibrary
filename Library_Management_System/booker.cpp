@@ -32,10 +32,6 @@ namespace Booker{
 		{
 			return true;
 		}
-		else if (DistanceBetweenThem(Temp, book->Publisher) < Temp.length() / 3.0 + 3)
-		{
-			return true;
-		}
 
 		return false;
 	}

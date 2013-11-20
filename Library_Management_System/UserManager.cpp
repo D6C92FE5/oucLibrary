@@ -7,6 +7,7 @@ using namespace std;
 #include "UserManager.h"
 #include "datastore.h"
 string Type;
+int a;
 Datastore::User * IUser;
 //Î¬»¤
 namespace UserManager
