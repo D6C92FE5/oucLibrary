@@ -60,26 +60,28 @@ namespace UserManager
 	//一般用户
 	//用户成功登入下可用
 	//用户修改密码
-	void UpdataOnesPassword(string Password)
+	bool UpdataOnesPassword(string Password)
 	{
-		if (Type.size() == 0)return;
+		if (Type.size() == 0)return false;
 		int length = Password.size();
 		for (int i = 0; i < length; i++)
 		{
 			IUser->Password[i] = Password[i];
 		}
 		Datastore::InsertOrUpdate(IUser);
+		return true;
 	}
 	//用户修改INFO
-	void UpdataOnesInfo(string Info)
+	bool UpdataOnesInfo(string Info)
 	{
-		if (Type.size() == 0)return;
+		if (Type.size() == 0)return false;
 		int length = Info.size();
 		for (int i = 0; i < length; i++)
 		{
 			IUser->Info[i] = Info[i];
 		}
 		Datastore::InsertOrUpdate(IUser);
+		return true;
 	}
 
 
@@ -117,41 +119,47 @@ namespace UserManager
 		return user;
 	}
 	//删除用户
-	void DeleteUser(string Name)
+	bool DeleteUser(string Name)
 	{
-		if (Type != "管理员")return;
+		if (Type != "管理员")return false;
 		auto user = Datastore::Select<Datastore::User>([Name](const Datastore::User* user) {
 			return user->Name == Name;
 		});
+		if (user == NULL)return false;
 		Datastore::Delete<Datastore::User>(user->Index);
 		delete user;
+		return true;
 	}
 	//更新用户密码
-	void UpdataUserPassword(string Name, string Password)
+	bool UpdataUserPassword(string Name, string Password)
 	{
-		if (Type != "管理员")return;
-		if (Password == "")return;
+		if (Type != "管理员")return false;
+		if (Password == "")return false;
 		else {
 			auto user = Datastore::Select<Datastore::User>([Name](const Datastore::User* user) {
 				return user->Name == Name;
 			});
+			if (user == NULL)return false;
 			user->Password == Password;
 			Datastore::InsertOrUpdate(user);
 			delete user;
+			return true;
 		}
 	}
 	//更新用户INFO
-	void UpdataUserInfo(string Name, string Info)
+	bool UpdataUserInfo(string Name, string Info)
 	{
-		if (Type != "管理员")return;
-		if (Info == "")return;
+		if (Type != "管理员")return false;
+		if (Info == "")return false;
 		else {
 			auto user = Datastore::Select<Datastore::User>([Name](const Datastore::User* user) {
 				return user->Name == Name;
 			});
+			if (user == NULL)return false;
 			user->Info == Info;
 			Datastore::InsertOrUpdate(user);
 			delete user;
+			return true;
 		}
 	}
 }

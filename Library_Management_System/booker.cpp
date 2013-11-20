@@ -124,43 +124,37 @@ namespace Booker{
 	//增加图书
 	bool AddBook(string Isbn, string Name, string Author, string Publisher, int Num)
 	{
-		if ((Isbn.length() == 13 || Isbn.length() == 10) && Name.length() > 0 && Name.length() < 100 && Author.length() > 0 && Author.length() < 100 && Publisher.length() > 0 && Publisher.length() < 100 && Num > 0)
+
+		for (int i = 0; i < 13; i++)
 		{
-			for (int i = 0; i < 13; i++)
+			if (!(Isbn[i] >= '0' && Isbn[i] <= '9' || Isbn[i] == 'X'))
 			{
-				if (!(Isbn[i] >= '0' && Isbn[i] <= '9' || Isbn[i] == 'X'))
-				{
-					return false;
-				}
+				return false;
 			}
+		}
 
-			Temp = Isbn;
-			Datastore::Book **book = Datastore::Selects<Datastore::Book>(SearchBookCondition);
+		Temp = Isbn;
+		Datastore::Book **book = Datastore::Selects<Datastore::Book>(SearchBookCondition);
 
-			if (book[0] != NULL)
-			{
-				book[0]->Total += Num;
-				book[0]->Remain += Num;
-				Datastore::InsertOrUpdate(book[0]);
-				return true;
-			}
-
-			Datastore::Book *books = Datastore::Create<Datastore::Book>();
-			strcpy(books->Name, &Name[0]);
-			strcpy(books->Isbn, &Isbn[0]);
-			strcpy(books->Author, &Author[0]);
-			strcpy(books->Publisher, &Publisher[0]);
-			books->Total = Num;
-			books->Remain = Num;
-			Datastore::InsertOrUpdate(books);
-			delete book;
-			book = NULL;
+		if (book[0] != NULL)
+		{
+			book[0]->Total += Num;
+			book[0]->Remain += Num;
+			Datastore::InsertOrUpdate(book[0]);
 			return true;
 		}
-		else
-		{
-			return false;
-		}
+
+		Datastore::Book *books = Datastore::Create<Datastore::Book>();
+		strcpy(books->Name, &Name[0]);
+		strcpy(books->Isbn, &Isbn[0]);
+		strcpy(books->Author, &Author[0]);
+		strcpy(books->Publisher, &Publisher[0]);
+		books->Total = Num;
+		books->Remain = Num;
+		Datastore::InsertOrUpdate(books);
+		delete book;
+		book = NULL;
+		return true;
 	}
 
 	//删除图书
@@ -171,14 +165,11 @@ namespace Booker{
 
 		if (book[0] != NULL && book[0]->Remain >= Num)
 		{
-			book[0]->Remain -= Num;
-			book[0]->Total -= Num;
-			Datastore::InsertOrUpdate(book[0]);
+			Datastore::Delete<Datastore::Book>(book[0]->Index);
 			delete[] book;
 			book = NULL;
 			return true;
 		}
-
 		return false;
 	}
 
@@ -429,7 +420,7 @@ namespace Booker{
 	Datastore::Book* IndexFindBook(int Index)
 	{
 		auto book = Datastore::Select<Datastore::Book>([Index](const Datastore::Book* book) {
-			return book->Index==Index;
+			return book->Index == Index;
 		});
 		return book;
 	}
