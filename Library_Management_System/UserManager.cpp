@@ -25,7 +25,7 @@ namespace UserManager
 			return user->Name == Name;
 		});
 		if (user == NULL) return false;
-		bool flag = strcmp(user->Password, password);
+		bool flag = (bool) strcmp(user->Password, password);
 		if ( !flag ){
 			Type = user->Type;
 			IUser->Index = user->Index;
@@ -60,28 +60,26 @@ namespace UserManager
 	//一般用户
 	//用户成功登入下可用
 	//用户修改密码
-	bool UpdataOnesPassword(string Password)
+	void UpdataOnesPassword(string Password)
 	{
-		if (Type.size() == 0)return false;
+		if (Type.size() == 0)return;
 		int length = Password.size();
 		for (int i = 0; i < length; i++)
 		{
 			IUser->Password[i] = Password[i];
 		}
 		Datastore::InsertOrUpdate(IUser);
-		return true;
 	}
 	//用户修改INFO
-	bool UpdataOnesInfo(string Info)
+	void UpdataOnesInfo(string Info)
 	{
-		if (Type.size() == 0)return false;
+		if (Type.size() == 0)return;
 		int length = Info.size();
 		for (int i = 0; i < length; i++)
 		{
 			IUser->Info[i] = Info[i];
 		}
 		Datastore::InsertOrUpdate(IUser);
-		return true;
 	}
 
 
@@ -119,47 +117,44 @@ namespace UserManager
 		return user;
 	}
 	//删除用户
-	bool DeleteUser(string Name)
+	void DeleteUser(string Name)
 	{
-		if (Type != "管理员")return false;
+		if (Type != "管理员")return;
 		auto user = Datastore::Select<Datastore::User>([Name](const Datastore::User* user) {
 			return user->Name == Name;
 		});
-		if (user == NULL)return false;
+		if (user == NULL)return;
 		Datastore::Delete<Datastore::User>(user->Index);
 		delete user;
-		return true;
 	}
 	//更新用户密码
-	bool UpdataUserPassword(string Name, string Password)
+	void UpdataUserPassword(string Name, string Password)
 	{
-		if (Type != "管理员")return false;
-		if (Password == "")return false;
+		if (Type != "管理员")return;
+		if (Password == "")return;
 		else {
 			auto user = Datastore::Select<Datastore::User>([Name](const Datastore::User* user) {
 				return user->Name == Name;
 			});
-			if (user == NULL)return false;
+			if (user == NULL)return;
 			user->Password == Password;
 			Datastore::InsertOrUpdate(user);
 			delete user;
-			return true;
 		}
 	}
 	//更新用户INFO
-	bool UpdataUserInfo(string Name, string Info)
+	void UpdataUserInfo(string Name, string Info)
 	{
-		if (Type != "管理员")return false;
-		if (Info == "")return false;
+		if (Type != "管理员")return;
+		if (Info == "")return;
 		else {
 			auto user = Datastore::Select<Datastore::User>([Name](const Datastore::User* user) {
 				return user->Name == Name;
 			});
-			if (user == NULL)return false;
+			if (user == NULL)return;
 			user->Info == Info;
 			Datastore::InsertOrUpdate(user);
 			delete user;
-			return true;
 		}
 	}
 }

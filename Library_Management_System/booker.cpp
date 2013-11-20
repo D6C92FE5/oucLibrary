@@ -24,15 +24,15 @@ namespace Booker{
 		{
 			return true;
 		}
-		else if (DistanceBetweenThem(Temp, book->Name) < Temp.length() / 3.0)
+		else if (DistanceBetweenThem(Temp, book->Name) < Temp.length() / 3.0 + 1)
 		{
 			return true;
 		}
-		else if (DistanceBetweenThem(Temp, book->Author) < Temp.length() / 3.0)
+		else if (DistanceBetweenThem(Temp, book->Author) < Temp.length() / 3.0 + 2)
 		{
 			return true;
 		}
-		else if (DistanceBetweenThem(Temp, book->Publisher) < Temp.length() / 3.0)
+		else if (DistanceBetweenThem(Temp, book->Publisher) < Temp.length() / 3.0 + 3)
 		{
 			return true;
 		}
@@ -124,14 +124,6 @@ namespace Booker{
 	//Ôö¼ÓÍ¼Êé
 	bool AddBook(string Isbn, string Name, string Author, string Publisher, int Num)
 	{
-
-		for (int i = 0; i < 13; i++)
-		{
-			if (!(Isbn[i] >= '0' && Isbn[i] <= '9' || Isbn[i] == 'X'))
-			{
-				return false;
-			}
-		}
 
 		Temp = Isbn;
 		Datastore::Book **book = Datastore::Selects<Datastore::Book>(SearchBookCondition);
