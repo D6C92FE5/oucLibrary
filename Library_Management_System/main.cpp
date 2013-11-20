@@ -134,8 +134,9 @@ void printRecordList(Datastore::Record** list){
 	while(list[i] != NULL){
 		Datastore::Book* book;
 		book = Booker::IndexFindBook(list[i]->BookIndex);
-		cout << setw(30) << book->Name << setw(15) << book->Isbn << setw(10) << list[i]->Datetime 
+		cout << setw(30) << book->Name << setw(15) << book->Isbn << setw(10) << ctime(&list[i]->Datetime)
 			<< setw(10) << list[i]->IsRenew << endl;
+		i++;
 	}
 }
 

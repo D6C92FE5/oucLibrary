@@ -93,7 +93,7 @@ namespace Booker{
 	//Account&IsbnËÑË÷¼ÇÂ¼
 	bool AnotherSearchRecordCondition(const Datastore::Record* record)
 	{
-		return (((!(record->UserIndex - UserIndex)) & (!(record->BookIndex - BookIndex))) & (!record->IsReturned));
+		return (record->UserIndex == UserIndex) && !(record->IsReturned);
 	}
 
 	//Account&Isbn²éÕÒ¼ÇÂ¼
