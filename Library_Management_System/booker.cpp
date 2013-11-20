@@ -16,69 +16,75 @@ namespace Booker{
 	{
 		return !strcmp(user->Name, &Temp[0]);
 	}
-
-	//Ä£ºýËÑË÷Í¼Êé
 	bool AnotherSearchBookCondition(const Datastore::Book* book)
 	{
-		if (DistanceBetweenThem(Temp, book->Isbn) < Temp.length() / 3.0)
-		{
-			return true;
-		}
-		else if (DistanceBetweenThem(Temp, book->Name) < Temp.length() / 3.0 + 1)
-		{
-			return true;
-		}
-		else if (DistanceBetweenThem(Temp, book->Author) < Temp.length() / 3.0 + 2)
-		{
-			return true;
-		}
-
-		return false;
+		return Temp == book->Name;
 	}
+	////Ä£ºýËÑË÷Í¼Êé
+	//bool AnotherSearchBookCondition(const Datastore::Book* book)
+	//{
+	//	if (DistanceBetweenThem(Temp, book->Isbn) < Temp.length() / 3.0)
+	//	{
+	//		return true;
+	//	}
+	//	else if (DistanceBetweenThem(Temp, book->Name) < Temp.length() / 3.0 + 2)
+	//	{
+	//		return true;
+	//	}
+	//	else if (DistanceBetweenThem(Temp, book->Author) < Temp.length() / 3.0)
+	//	{
+	//		return true;
+	//	}
+	//	else if (DistanceBetweenThem(Temp, book->Publisher)< Temp.length() / 3.0)
+	//	{
+	//		return true;
+	//	}
+	//	return false;
+	//}
 
-	//±à¼­¾àÀë,¸¨ÖúËÑË÷
-	int DistanceBetweenThem(string a, string b)
-	{
-		int lena = a.length(), lenb = b.length(), i = 0;
+	////±à¼­¾àÀë,¸¨ÖúËÑË÷
+	//int DistanceBetweenThem(string a, string b)
+	//{
+	//	int lena = a.length(), lenb = b.length(), i = 0;
 
-		int **dp = new int*[lena + 1];
+	//	int **dp = new int*[lena + 1];
 
-		for (i = 0; i <= lena; i++)
-		{
-			dp[i] = new int[lenb + 1];
-		}
+	//	for (i = 0; i <= lena; i++)
+	//	{
+	//		dp[i] = new int[lenb + 1];
+	//	}
 
-		for (i = 0; i <= lenb; i++)
-		{
-			dp[0][i] = i;
-		}
+	//	for (i = 0; i <= lenb; i++)
+	//	{
+	//		dp[0][i] = i;
+	//	}
 
-		for (i = 0; i <= lena; i++)
-		{
-			dp[i][0] = i;
-		}
+	//	for (i = 0; i <= lena; i++)
+	//	{
+	//		dp[i][0] = i;
+	//	}
 
-		for (i = 1; i <= lena; i++)
-		{
-			for (int j = 1; j <= lenb; j++)
-			{
-				int cost = a[i - 1] == b[j - 1] ? 0 : 1;
-				dp[i][j] = min(dp[i - 1][j] + 1, dp[i][j - 1] + 1) < dp[i - 1][j - 1] + cost ?
-					min(dp[i - 1][j] + 1, dp[i][j - 1] + 1) : dp[i - 1][j - 1] + cost;
-			}
-		}
+	//	for (i = 1; i <= lena; i++)
+	//	{
+	//		for (int j = 1; j <= lenb; j++)
+	//		{
+	//			int cost = a[i - 1] == b[j - 1] ? 0 : 1;
+	//			dp[i][j] = min(dp[i - 1][j] + 1, dp[i][j - 1] + 1) < dp[i - 1][j - 1] + cost ?
+	//				min(dp[i - 1][j] + 1, dp[i][j - 1] + 1) : dp[i - 1][j - 1] + cost;
+	//		}
+	//	}
 
-		int result = dp[lena][lenb];
+	//	int result = dp[lena][lenb];
 
-		for (i = 0; i <= lena; i++)
-		{
-			delete[] dp[i];
-		}
+	//	for (i = 0; i <= lena; i++)
+	//	{
+	//		delete[] dp[i];
+	//	}
 
-		delete[] dp;
+	//	delete[] dp;
 
-		return result;
-	}
+	//	return result;
+	//}
 
 	//AccoutËÑË÷¼ÇÂ¼
 	bool SearchRecordCondition(const Datastore::Record* record)

@@ -647,6 +647,11 @@ int __main ()
 	return 0;
 }
 
+int _main()
+{
+	Datastore::Init();
+	return 0;
+}
 int main(){
 	Datastore::Init();
 	visitorMenu();

@@ -65,6 +65,7 @@ namespace UserManager
 	{
 		if (Type.size() == 0)return;
 		int length = Password.size();
+		memset(IUser->Password, 0, sizeof(Password));
 		for (int i = 0; i < length; i++)
 		{
 			IUser->Password[i] = Password[i];
@@ -76,6 +77,7 @@ namespace UserManager
 	{
 		if (Type.size() == 0)return;
 		int length = Info.size();
+		memset(IUser->Info, 0, sizeof(Info));
 		for (int i = 0; i < length; i++)
 		{
 			IUser->Info[i] = Info[i];
@@ -138,7 +140,8 @@ namespace UserManager
 				return user->Name == Name;
 			});
 			if (user == NULL)return;
-			user->Password == Password;
+			memset(user->Password, 0, sizeof(Password));
+			strcpy(user->Password, &Password[0]);
 			Datastore::InsertOrUpdate(user);
 			delete user;
 		}
@@ -153,7 +156,8 @@ namespace UserManager
 				return user->Name == Name;
 			});
 			if (user == NULL)return;
-			user->Info == Info;
+			memset(user->Info, 0, sizeof(Info));
+			strcpy(user->Info, &Info[0]);
 			Datastore::InsertOrUpdate(user);
 			delete user;
 		}
