@@ -332,7 +332,7 @@ namespace Booker{
 		user = NULL;
 		for (int i = 0; record[i] != NULL; i++)
 		{
-			if (record[i]->IsReturned = false)
+			if (record[i]->IsReturned == false)
 			{
 				record[i]->IsReturned = true;
 				Datastore::InsertOrUpdate(record[i]);
