@@ -18,7 +18,10 @@ namespace Booker{
 	}
 	bool AnotherSearchBookCondition(const Datastore::Book* book)
 	{
-		return Temp == book->Name;
+		return book->Isbn == Temp ||
+			strstr(book->Name, Temp.data()) ||
+			strstr(book->Author, Temp.data()) ||
+			strstr(book->Publisher, Temp.data());
 	}
 	////Ä£ºýËÑË÷Í¼Êé
 	//bool AnotherSearchBookCondition(const Datastore::Book* book)
@@ -211,7 +214,7 @@ namespace Booker{
 
 		if (book[0] != NULL)
 		{
-			strcpy(book[0]->Publisher, &Author[0]);
+			strcpy(book[0]->Author, &Author[0]);
 			Datastore::InsertOrUpdate(book[0]);
 			delete[] book;
 			book = NULL;
@@ -329,7 +332,7 @@ namespace Booker{
 		user = NULL;
 		for (int i = 0; record[i] != NULL; i++)
 		{
-			if (record[i]->IsReturned = false)
+			if (record[i]->IsReturned == false)
 			{
 				record[i]->IsReturned = true;
 				Datastore::InsertOrUpdate(record[i]);
