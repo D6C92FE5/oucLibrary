@@ -665,8 +665,10 @@ void adminMenu(){
 }
 
 //插入示例图书的代码
+//初始化
 int __main ()
 {
+	Datastore::Init(true);
 	ifstream infile("书目信息.txt");
 	string temp;
 	while (getline(infile, temp))

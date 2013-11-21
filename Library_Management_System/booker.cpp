@@ -214,7 +214,7 @@ namespace Booker{
 
 		if (book[0] != NULL)
 		{
-			strcpy(book[0]->Publisher, &Author[0]);
+			strcpy(book[0]->Author, &Author[0]);
 			Datastore::InsertOrUpdate(book[0]);
 			delete[] book;
 			book = NULL;
