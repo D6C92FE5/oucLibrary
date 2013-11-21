@@ -579,7 +579,8 @@ void searchUser(){
 	print("要搜索的用户名：");
 	name = getInputString(LEN_USER_NAME);
 	user = UserManager::SelectUser(name);
-	cout << "用户名：" << user->Name << " 用户类型：" << user->Type << " INFO：" << user->Info << endl;
+	if (user == NULL)cout << "用户不存在。" << endl;
+	else cout << "用户名：" << user->Name << " 用户类型：" << user->Type << " INFO：" << user->Info << endl;
 }
 
 //借书
@@ -598,6 +599,7 @@ void borrowBook(bool (*b)(string, string)){
 }
 
 //还书
+
 void returnBook(){
 	string userName;
 	string isbn;

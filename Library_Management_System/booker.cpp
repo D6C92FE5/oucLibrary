@@ -98,7 +98,7 @@ namespace Booker{
 	//Account&IsbnËÑË÷¼ÇÂ¼
 	bool AnotherSearchRecordCondition(const Datastore::Record* record)
 	{
-		return (record->UserIndex == UserIndex) && !(record->IsReturned);
+		return (record->UserIndex == UserIndex);
 	}
 
 	//Account&Isbn²éÕÒ¼ÇÂ¼
@@ -302,6 +302,7 @@ namespace Booker{
 			record->IsReturned = false;
 			record->IsRenew = false;
 			record->IsDeleted = false;
+			record->Index = -1;
 			Datastore::InsertOrUpdate(record);
 			delete[] user;
 			delete[] book;
@@ -320,7 +321,7 @@ namespace Booker{
 		Datastore::User **user = Datastore::Selects<Datastore::User>(SearchUserCondition);
 		Temp = Isbn;
 		Datastore::Book **book = Datastore::Selects<Datastore::Book>(SearchBookCondition);
-
+		if (user[0] == NULL || book[0] == NULL)return -1;
 		UserIndex = user[0]->Index;
 		BookIndex = book[0]->Index;
 
