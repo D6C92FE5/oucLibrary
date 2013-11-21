@@ -18,7 +18,10 @@ namespace Booker{
 	}
 	bool AnotherSearchBookCondition(const Datastore::Book* book)
 	{
-		return Temp == book->Name;
+		return book->Isbn == Temp ||
+			strstr(book->Name, Temp.data()) ||
+			strstr(book->Author, Temp.data()) ||
+			strstr(book->Publisher, Temp.data());
 	}
 	////Ä£ºýËÑË÷Í¼Êé
 	//bool AnotherSearchBookCondition(const Datastore::Book* book)
