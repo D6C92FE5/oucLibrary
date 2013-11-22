@@ -119,7 +119,7 @@ void printBookList(Datastore::Book** list){
 		printLine("找不到相关图书！");
 		return;
 	}
-	printLine("-------------");
+	printLine("----------------------");
 	while(list[i] != NULL){
 		print("书名：");
 		printLine(list[i]->Name);
@@ -134,7 +134,7 @@ void printBookList(Datastore::Book** list){
 		print("可借：");
 		print(list[i]->Remain);
 		printLine();
-		printLine("-------------");
+		printLine("----------------------");
 		i++;
 	}
 }
@@ -146,7 +146,7 @@ void printRecordList(Datastore::Record** list){
 		printLine("暂无记录！");
 		return;
 	}
-	printLine("---借阅记录--");
+	printLine("-------借阅记录-------");
 	while(list[i] != NULL){
 		Datastore::Book* book;
 		book = Booker::IndexFindBook(list[i]->BookIndex);
@@ -156,9 +156,13 @@ void printRecordList(Datastore::Record** list){
 		printLine(book->Isbn);
 		print("借阅日期：");
 		print(ctime(&list[i]->Datetime));
-		print("可借：");
-		print(list[i]->IsRenew);
-		printLine("-------------");
+		print("是否续借：");
+		if(!list[i]->IsRenew){
+			printLine("否");
+		}else{
+			printLine("是");
+		}
+		printLine("----------------------");
 		i++;
 		delete book;
 	}
@@ -190,9 +194,12 @@ string getInputString(unsigned int maxLength = 0){
 	return input;
 }
 
-//验证字符串每一位都是数字且没有先导0
+//验证字符串每一位都是数字且没有先导0的长串或只有一个0
 bool allNumric(const char * str){
 	if('0' == str[0]){
+		if('\0' == str[1]){
+			return true;
+		}
 		return false;
 	}
 	int i = 0;
@@ -361,7 +368,7 @@ void visitorMenu(){
 //修改用户信息菜单
 void userInfoChangeMenu(){
 	int choice = 0;
-	string newInfo;
+	string newInfo, newInfo2;
 	bool isAdmin = IUser != NULL && strcmp(IUser->Type, "管理员") == 0;
 	bool isUser = IUser != NULL && strcmp(IUser->Type, "用户") == 0;
 	string userName;
@@ -382,12 +389,22 @@ void userInfoChangeMenu(){
 			menuTag = 1;
 			break;
 		}
-		cout << "请输入新" << userInfoItems[choice];
+		cout << "请输入新" << userInfoItems[choice] << "：";
 		if(isUser){
 			if(choice == 1){
-				newInfo = getInputPassword();
+				newInfo = getInputString(LEN_USER_PASSWORD);
+				printLine("再次输入新密码：");
+				newInfo2 = getInputString(LEN_USER_PASSWORD);
+				if(strcmp(newInfo.c_str(), newInfo2.c_str()) != 0){
+					printLine("两次密码不一致，修改失败！");
+					if(isAdmin){
+						menuTag = 3;
+					}else {
+						menuTag = 2;
+					}
+					return;
+				}
 			}else {
-				cout << ":";
 				newInfo = getInputString(LEN_USER_INFO);
 			}
 			changFunc[choice](newInfo);
@@ -479,7 +496,7 @@ void bookInfoChangeMenu(){
 			maxLength = LEN_BOOK_PUBLISHER;
 		}
 	case 4:
-		print("请输入要修改的图书isbn：");
+		print("请输入要修改的图书ISBN：");
 		bookIsbn = getInputIsbn();
 		cout << "请输入新的" << bookInfoItems[choice] << ":";
 		if(0 == maxLength){
@@ -579,8 +596,7 @@ void searchUser(){
 	print("要搜索的用户名：");
 	name = getInputString(LEN_USER_NAME);
 	user = UserManager::SelectUser(name);
-	if (user == NULL)cout << "用户不存在。" << endl;
-	else cout << "用户名：" << user->Name << " 用户类型：" << user->Type << " INFO：" << user->Info << endl;
+	cout << "用户名：" << user->Name << " 用户类型：" << user->Type << " INFO：" << user->Info << endl;
 }
 
 //借书
@@ -599,7 +615,6 @@ void borrowBook(bool (*b)(string, string)){
 }
 
 //还书
-
 void returnBook(){
 	string userName;
 	string isbn;
@@ -667,7 +682,6 @@ void adminMenu(){
 }
 
 //插入示例图书的代码
-//初始化
 int __main ()
 {
 	Datastore::Init(true);

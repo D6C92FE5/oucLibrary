@@ -97,22 +97,21 @@ namespace UserManager
 		auto user = Datastore::Create<Datastore::User>();
 		char name[LEN_USER_NAME];
 		char password[LEN_USER_PASSWORD];
-		char type[LEN_USER_TYPE] = "用户";
+		char type[LEN_USER_TYPE]="用户";
 		char info[LEN_USER_INFO];
-		memset(name, 0, sizeof(name));
-		memset(password, 0, sizeof(password));
-		memset(info, 0, sizeof(info));
+		memset(name,0,sizeof(name));
+		memset(password,0,sizeof(password));
+		memset(info,0,sizeof(info));
 		for (int i = 0; Name[i] != 0; i++){ name[i] = Name[i]; }
 		for (int i = 0; Password[i] != 0; i++){ password[i] = Password[i]; }
-		
 		strcpy(user->Name, name);
 		strcpy(user->Password, password);
 		strcpy(user->Info, info);
 		strcpy(user->Type, type);
 		user->IsDeleted = false;
-		user->Index = -1;
 		Datastore::InsertOrUpdate(user);
 		delete user;
+		user=NULL;
 	}
 	//选择用户
 	Datastore::User * SelectUser(string Name)
