@@ -6,12 +6,6 @@
 #include <conio.h>
 #include <iomanip>
 
-#undef _DEBUG 
-#ifdef _DEBUG 
-#define DEBUG __main();
-#else 
-#define DEBUG 
-#endif
 
 using namespace UserManager;
 using namespace Booker;
@@ -388,8 +382,8 @@ void userInfoChangeMenu(){
 	bool isUser = IUser != NULL && strcmp(IUser->Type, "用户") == 0;
 	string userName;
 	string userInfoItems[3] = {"", "密码", "Info"};
-	void (*changFunc[3])(string) = {NULL, UserManager::UpdataOnesPassword, UserManager::UpdataOnesInfo};
-	void (*changFunc2[3])(string, string) = {NULL, UserManager::UpdataUserPassword, UserManager::UpdataUserInfo};
+	bool (*changFunc[3])(string) = {NULL, UserManager::UpdataOnesPassword, UserManager::UpdataOnesInfo};
+	bool (*changFunc2[3])(string, string) = {NULL, UserManager::UpdataUserPassword, UserManager::UpdataUserInfo};
 	printUserInfoChangeMenu();
 	choice = getInputNonNegNum(2);
 	switch (choice)
@@ -547,11 +541,21 @@ void bookInfoChangeMenu(){
 void deleteBook(){
 	string isbn;
 	int num;
+	Datastore::Book** book;
 	print("要删除的图书ISBN：");
 	isbn = getInputIsbn();
+	book = Booker::IsbnFindBook(isbn);
+	if(book[0] == NULL){
+		printLine("图书不存在！");
+		return;
+	}
 	print("要删除的数量：");
 	num = getInputNonNegNum();
-	Booker::DeleteBook(isbn, num);
+	if(Booker::DeleteBook(isbn, num)){
+		printLine("删除成功！");
+	}else{
+		printLine("删除失败！");
+	}
 }
 
 //删除用户
@@ -559,17 +563,25 @@ void deleteUser(){
 	string name;
 	string name2;
 	print("要删除用户的用户名：");
-	name = getInputIsbn();
+	name = getInputString(LEN_USER_NAME);
 	if(strcmp(name.c_str(), "") == 0){
 		return;
 	}
+	if(UserManager::SelectUser(name) != NULL){
+		printLine("用户不存在！");
+		return;
+	}
 	print("确认要删除用户的用户名：");
-	name2 = getInputIsbn();
+	name2 = getInputString(LEN_USER_NAME);
 	if(strcmp(name.c_str(), name2.c_str()) != 0){
 		printLine("两次用户名不一致，不执行删除操作，返回。");
 		return;
 	}else if(confirm()){
-		UserManager::DeleteUser(name);
+		if(UserManager::DeleteUser(name)){
+			printLine("删除成功！");
+		}else{
+			printLine("删除失败！");
+		}
 	}
 }
 
@@ -615,6 +627,10 @@ void signUp(){
 	if(strcmp(name.c_str(), "") == 0){
 		return;
 	}
+	if(UserManager::SelectUser(name) != NULL){
+		printLine("已存在的用户名！");
+		return;
+	}
 	print("密码：");
 	pwd = getInputString(LEN_USER_PASSWORD);
 	if(strcmp(pwd.c_str(), "") == 0){
@@ -624,8 +640,11 @@ void signUp(){
 	print("确认密码：");
 	pwd2 = getInputString(LEN_USER_PASSWORD);
 	if(strcmp(pwd.c_str(), pwd2.c_str()) == 0){
-		UserManager::InsertUser(name, pwd);
-		printLine("注册成功！");
+		if(UserManager::InsertUser(name, pwd)){
+			printLine("注册成功！");
+		}else{
+			printLine("注册失败！");
+		}
 	}else{
 		printLine("两次密码不一致，注册失败！");
 	}
@@ -653,12 +672,16 @@ void borrowBook(bool (*b)(string, string)){
 	if(strcmp(userName.c_str(), "") == 0){
 		return;
 	}
+	if(UserManager::SelectUser(userName) == NULL){
+		printLine("用户名不存在！");
+		return;
+	}
 	print("图书ISBN：");
 	isbn = getInputIsbn();
 	if(b(userName, isbn)){
 		printLine("借阅成功！");
 	}else{
-		printLine("借阅失败！请检查用户名以及图书信息是否允许借阅。");
+		printLine("借阅失败！请检查图书信息是否允许借阅。");
 	}
 }
 
@@ -764,7 +787,6 @@ int _main()
 
 int main(){
 	Datastore::Init();
-	DEBUG;
 	visitorMenu();
 	while(menuTag != 0){
 		switch (menuTag)
