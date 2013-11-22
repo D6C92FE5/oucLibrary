@@ -99,7 +99,7 @@ namespace UserManager
 		}
 		Datastore::InsertOrUpdate(IUser);
 		auto user = Datastore::Select<Datastore::User>([](const Datastore::User* user) {
-			return strcmp(user->Info, IUser->Info);
+			return strcmp(user->Info, IUser->Info) != 0;
 		});
 		if (user->Password == Info)return true;
 		else
