@@ -707,6 +707,7 @@ int __main ()
 
 int _main()
 {
+	// Test!
 	Datastore::Init();
 	return 0;
 }
