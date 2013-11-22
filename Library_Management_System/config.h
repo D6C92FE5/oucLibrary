@@ -48,4 +48,7 @@ namespace Config {
 
     //数据存储文件读取缓存，每次读取的记录条数
     extern const int FILE_READ_CACHE_COUNT;
+
+    // 是否为调试版本
+    extern const bool DEBUG;
 }

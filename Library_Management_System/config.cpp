@@ -36,4 +36,10 @@ namespace Config {
     const char* DATASTORE_PATH = ".\\Datastore\\";
 
     const int FILE_READ_CACHE_COUNT = 100;
+
+    #ifdef _DEBUG
+    const bool DEBUG = true;
+    #else
+    const bool DEBUG = false;
+    #endif
 }
