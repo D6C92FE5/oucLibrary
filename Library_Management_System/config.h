@@ -12,12 +12,6 @@ namespace Config {
     #define LEN_USER_TYPE 10
     #define LEN_USER_INFO 100
 
-	#ifdef _DEBUG
-		extern bool isDebug = true;
-	#else
-		extern bool isDebug = false;
-	#endif
-
     //用户类型
     extern const bool ADMIN_USER;
     extern const bool NORMAL_USER;
