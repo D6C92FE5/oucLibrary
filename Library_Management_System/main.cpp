@@ -697,7 +697,7 @@ int __main ()
 		strcpy(TmpBook->Publisher, temp.c_str());
 		getline(infile, temp);
 		strcpy(TmpBook->Isbn, temp.c_str());
-		TmpBook->Total = rand() / 500;
+		TmpBook->Total = rand() / 500 + 10;
 		TmpBook->Remain = TmpBook->Total;
 		Datastore::InsertOrUpdate(TmpBook);
 		delete TmpBook;
