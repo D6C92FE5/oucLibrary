@@ -6,6 +6,13 @@
 #include <conio.h>
 #include <iomanip>
 
+#undef _DEBUG 
+#ifdef _DEBUG 
+#define DEBUG __main();
+#else 
+#define DEBUG 
+#endif
+
 using namespace UserManager;
 using namespace Booker;
 using namespace std;
@@ -50,7 +57,7 @@ void printVisitorMenu(){
 	printLine("---------菜单---------");
 	printLine("1.检索书目");
 	printLine("2.登陆");
-	printLine("3.退出系统");
+	printLine("0.退出系统");
 	printLine("----------------------");
 	printLine();
 }
@@ -62,7 +69,7 @@ void printUserMenu(){
 	printLine("2.修改个人信息");
 	printLine("3.权限提升（管理员）");
 	printLine("4.查看借阅记录");
-	printLine("5.注销");
+	printLine("0.注销");
 	printLine("----------------------");
 	printLine();
 }
@@ -82,7 +89,7 @@ void printAdminMenu(){
 	printLine("9.移除用户");
 	printLine("10.修改用户信息");
 	printLine("11.注册新用户");
-	printLine("12.注销");
+	printLine("0.注销");
 	printLine("----------------------");
 	printLine();
 }
@@ -92,7 +99,7 @@ void printUserInfoChangeMenu(){
 	printLine("-----修改用户信息-----");
 	printLine("1.修改密码");
 	printLine("2.修改简介");
-	printLine("3.返回");
+	printLine("0.返回");
 	printLine("----------------------");
 }
 
@@ -103,7 +110,7 @@ void printBookInfoChangeMenu(){
 	printLine("2.修改作者");
 	printLine("3.修改出版社");
 	printLine("4.修改ISBN");
-	printLine("5.返回");
+	printLine("0.返回");
 	printLine("----------------------");
 }
 
@@ -137,6 +144,7 @@ void printBookList(Datastore::Book** list){
 		printLine("----------------------");
 		i++;
 	}
+	printLine();
 }
 
 //打印借阅记录列表
@@ -166,6 +174,7 @@ void printRecordList(Datastore::Record** list){
 		i++;
 		delete book;
 	}
+	printLine();
 }
 
 // 释放搜索结果
@@ -247,29 +256,28 @@ string getInputPassword(){
 	return buf;
 }
 
-//重复请求一个正整数输入，直到输入正确，参数指定上限，默认没有
-int getInputPosNum(int maxNum = 0){
+//重复请求一个非负整数输入，直到输入正确，参数指定上限，默认没有
+int getInputNonNegNum(int maxNum = 0){
 	int num = -1;
 	string input;
 	while(num < 0 || cin.bad()){
 		if(cin.fail()){
-			printLine("无法恢复的输入错误，程序将退出，请重新启动！");
+			printLine("无法恢复的输入错误，程序将退出，请重新启动程序！");
 			exit(0);
 		}
-		while(num < 0 || cin.bad()){
-			input = getInputString(15);
-			if(!allNumric(input.c_str())){
+		input = getInputString(15);
+		if(strcmp(input.c_str(), "") == 0){
+			continue;
+		}else if(!allNumric(input.c_str())){
+			printWrongTypeWarning();
+		}else{
+			num	= atoi(input.c_str());
+			if(num < 0 || (maxNum && num > maxNum)){
 				printWrongTypeWarning();
-			}else{
-				num	= atoi(input.c_str());
-				if(num < 0 || (maxNum && num > maxNum)){
-					printWrongTypeWarning();
-				}
 			}
 		}
-		return num;
 	}
-	return maxNum;
+	return num;
 }
 
 //重复请求一个合法ISBN输入，直到输入正确
@@ -287,7 +295,7 @@ string getInputIsbn(){
 void searchBooks(){
 	string bookName;
 	Datastore::Book**  bookList;
-	print("请输入书名：");
+	print("请输入关键字或ISBN：");
 	bookName = getInputString(LEN_BOOK_NAME);
 	bookList = AnythingFindBook(bookName);
 	printBookList(bookList);
@@ -302,7 +310,7 @@ bool confirm(){
 		printLine("该操作不可逆，确定吗？");
 		printLine("1.确定");
 		printLine("2.我点错了，返回");
-		isSure = getInputPosNum(2) == 1 ? true : false;
+		isSure = getInputNonNegNum(2) == 1 ? true : false;
 	}
 	return isSure;
 }
@@ -313,6 +321,10 @@ void login(bool (*f)(string, string)){
 	string pwd;
 	print("用户名：");
 	userName = getInputString(LEN_USER_NAME);
+	if(strcmp(userName.c_str(), "") == 0){
+		menuTag = 1;
+		return;
+	}
 	pwd = getInputPassword();
 	printLine();
 	if(!f(userName, pwd)){
@@ -348,7 +360,7 @@ void backToMainMenu(){
 void visitorMenu(){
 	int choice = 0;
 	printVisitorMenu();
-	choice = getInputPosNum(3);
+	choice = getInputNonNegNum(2);
 	switch (choice)
 	{
 	case 1:
@@ -357,7 +369,7 @@ void visitorMenu(){
 	case 2:
 		login(UserManager::Login);
 		break;
-	case 3:
+	case 0:
 		menuTag = 0;
 		break;
 	default:
@@ -368,6 +380,8 @@ void visitorMenu(){
 //修改用户信息菜单
 void userInfoChangeMenu(){
 	int choice = 0;
+	string name;
+	Datastore::User *user;
 	string newInfo, newInfo2;
 	bool isAdmin = IUser != NULL && strcmp(IUser->Type, "管理员") == 0;
 	bool isUser = IUser != NULL && strcmp(IUser->Type, "用户") == 0;
@@ -376,7 +390,7 @@ void userInfoChangeMenu(){
 	void (*changFunc[3])(string) = {NULL, UserManager::UpdataOnesPassword, UserManager::UpdataOnesInfo};
 	void (*changFunc2[3])(string, string) = {NULL, UserManager::UpdataUserPassword, UserManager::UpdataUserInfo};
 	printUserInfoChangeMenu();
-	choice = getInputPosNum(3);
+	choice = getInputNonNegNum(2);
 	switch (choice)
 	{
 	case 1:
@@ -408,6 +422,9 @@ void userInfoChangeMenu(){
 				newInfo = getInputString(LEN_USER_INFO);
 			}
 			changFunc[choice](newInfo);
+			name = IUser->Name;
+			user = UserManager::SelectUser(name);
+			cout << "用户名：" << user->Name << " 用户类型：" << user->Type << " INFO：" << user->Info << endl;
 		}else if(isAdmin){
 			if(choice == 1){
 				newInfo = getInputPassword();
@@ -415,10 +432,14 @@ void userInfoChangeMenu(){
 				newInfo = getInputString(LEN_USER_INFO);
 			}
 			changFunc2[choice](userName, newInfo);
+			name = userName;
+			user = UserManager::SelectUser(name);
+			cout << "用户名：" << user->Name << " 用户类型：" << user->Type << " INFO：" << user->Info << endl;
+			delete user;
 		}
 
 		break;
-	case 3:
+	case 0:
 		if(isAdmin){
 			menuTag = 3;
 		}else {
@@ -426,6 +447,7 @@ void userInfoChangeMenu(){
 		}
 		break;
 	default:
+		backToMainMenu();
 		break;
 	}
 }
@@ -446,7 +468,7 @@ void borrowRecord(){
 void normalMenu(){
 	int choice = 0;
 	printUserMenu();
-	choice = getInputPosNum(5);
+	choice = getInputNonNegNum(4);
 	switch (choice)
 	{
 	case 1:
@@ -461,7 +483,7 @@ void normalMenu(){
 	case 4:
 		borrowRecord();
 		break;
-	case 5:
+	case 0:
 		menuTag = 1;
 		break;
 	default:
@@ -476,11 +498,12 @@ void bookInfoChangeMenu(){
 	string bookIsbn;
 	string newInfo;
 	int maxLength = 0;
+	Datastore::Book** book;
 	string bookInfoItems[5] = {"", "书名", "作者", "出版社", "ISBN"};
 	bool (*changeFunc[5])(string,string) = {NULL, Booker::ChangeBookName, 
 		Booker::ChangeBookAuthor, Booker::ChangeBookPublisher, Booker::ChangeBookIsbn};
 	printBookInfoChangeMenu();
-	choice = getInputPosNum(5);
+	choice = getInputNonNegNum(4);
 	switch (choice)
 	{
 	case 1:
@@ -503,10 +526,16 @@ void bookInfoChangeMenu(){
 			newInfo = getInputIsbn();
 		}
 		newInfo = getInputString(maxLength);
-		changeFunc[choice](bookIsbn, newInfo);
+		if(changeFunc[choice](bookIsbn, newInfo)){
+			printLine("修改成功！");
+			book = Booker::IsbnFindBook(bookIsbn);
+			printBookList(book);
+		}else{
+			printLine("修改失败！");
+		}
 		menuTag = 33;
 		break;
-	case 5:
+	case 0:
 		menuTag = 3;
 	default:
 		break;
@@ -520,7 +549,7 @@ void deleteBook(){
 	print("要删除的图书ISBN：");
 	isbn = getInputIsbn();
 	print("要删除的数量：");
-	num = getInputPosNum();
+	num = getInputNonNegNum();
 	Booker::DeleteBook(isbn, num);
 }
 
@@ -530,6 +559,9 @@ void deleteUser(){
 	string name2;
 	print("要删除用户的用户名：");
 	name = getInputIsbn();
+	if(strcmp(name.c_str(), "") == 0){
+		return;
+	}
 	print("确认要删除用户的用户名：");
 	name2 = getInputIsbn();
 	if(strcmp(name.c_str(), name2.c_str()) != 0){
@@ -550,7 +582,7 @@ void addBook(){
 	print("要添加的图书ISBN：");
 	isbn = getInputIsbn();
 	print("要添加的数量：");
-	num = getInputPosNum();
+	num = getInputNonNegNum();
 	Datastore::Book** book;
 	book = Booker::IsbnFindBook(isbn);
 	if(book[0] == NULL){
@@ -579,13 +611,22 @@ void signUp(){
 	string pwd2;
 	print("用户名：");
 	name = getInputString(LEN_USER_NAME);
+	if(strcmp(name.c_str(), "") == 0){
+		return;
+	}
 	print("密码：");
 	pwd = getInputString(LEN_USER_PASSWORD);
+	if(strcmp(pwd.c_str(), "") == 0){
+		printLine("密码不能为空，注册失败！");
+		return;
+	}
 	print("确认密码：");
 	pwd2 = getInputString(LEN_USER_PASSWORD);
 	if(strcmp(pwd.c_str(), pwd2.c_str()) == 0){
 		UserManager::InsertUser(name, pwd);
 		printLine("注册成功！");
+	}else{
+		printLine("两次密码不一致，注册失败！");
 	}
 }
 
@@ -595,6 +636,9 @@ void searchUser(){
 	Datastore::User *user;
 	print("要搜索的用户名：");
 	name = getInputString(LEN_USER_NAME);
+	if(strcmp(name.c_str(), "") == 0){
+		return;
+	}
 	user = UserManager::SelectUser(name);
 	cout << "用户名：" << user->Name << " 用户类型：" << user->Type << " INFO：" << user->Info << endl;
 }
@@ -605,6 +649,9 @@ void borrowBook(bool (*b)(string, string)){
 	string isbn;
 	print("借阅用户：");
 	userName = getInputString(LEN_USER_NAME);
+	if(strcmp(userName.c_str(), "") == 0){
+		return;
+	}
 	print("图书ISBN：");
 	isbn = getInputIsbn();
 	if(b(userName, isbn)){
@@ -620,6 +667,9 @@ void returnBook(){
 	string isbn;
 	print("借阅用户：");
 	userName = getInputString(LEN_USER_NAME);
+	if(strcmp(userName.c_str(), "") == 0){
+		return;
+	}
 	print("图书ISBN：");
 	isbn = getInputIsbn();
 	int t = Booker::ReturnBook(userName, isbn);
@@ -636,7 +686,7 @@ void returnBook(){
 void adminMenu(){
 	int choice = 0;
 	printAdminMenu();
-	choice = getInputPosNum(12);
+	choice = getInputNonNegNum(11);
 	switch (choice)
 	{
 	case 1:
@@ -660,7 +710,6 @@ void adminMenu(){
 	case 7:
 		borrowBook(Booker::RenewBook);
 		break;
-		break;
 	case 8:
 		searchUser();
 		break;
@@ -673,10 +722,11 @@ void adminMenu(){
 	case 11:
 		signUp();
 		break;
-	case 12:
+	case 0:
 		menuTag = 1;
 		break;
 	default:
+		backToMainMenu();
 		break;
 	}
 }
@@ -702,18 +752,18 @@ int __main ()
 		Datastore::InsertOrUpdate(TmpBook);
 		delete TmpBook;
 	}
+	printf("hehe");
 	return 0;
 }
 
 int _main()
 {
-	// Test!
-	Datastore::Init();
 	return 0;
 }
 
 int main(){
 	Datastore::Init();
+	DEBUG;
 	visitorMenu();
 	while(menuTag != 0){
 		switch (menuTag)
