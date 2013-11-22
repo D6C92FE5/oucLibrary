@@ -221,7 +221,7 @@ bool allNumric(const char * str){
 	return true;
 }
 
-//ISBN合法性检测(仅检测长度以及是否由纯数字和末尾可能的X组成)
+//ISBN合法性检测(仅检测长度以及是否由纯数字和末尾可能的X/x组成)
 bool isbnCheck(string str){
 	if((str.size() != 13 && str.size() != 10)){
 		return false;
@@ -230,7 +230,8 @@ bool isbnCheck(string str){
 		if(allNumric(str.c_str())){
 			return true;
 		}
-	}else if(allNumric(str.c_str()) || (allNumric(str.substr(0,str.size() - 2).c_str()) && 'X' == str.at(str.size() - 1))){
+	}else if(allNumric(str.c_str()) || (allNumric(str.substr(0,str.size() - 2).c_str()) && 
+		('X' == str.at(str.size() - 1) ||  'x' == str.at(str.size() - 1)))){
 		return true;
 	}
 	return false;
