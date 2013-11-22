@@ -26,8 +26,8 @@ namespace UserManager
 			return user->Name == Name;
 		});
 		if (user == NULL) return false;
-		bool flag = (bool) strcmp(user->Password, password);
-		if ( !flag ){
+		bool flag = (bool)strcmp(user->Password, password);
+		if (!flag){
 			Type = user->Type;
 			IUser->Index = user->Index;
 			IUser->IsDeleted = user->IsDeleted;
@@ -61,28 +61,52 @@ namespace UserManager
 	//一般用户
 	//用户成功登入下可用
 	//用户修改密码
-	void UpdataOnesPassword(string Password)
+	bool UpdataOnesPassword(string Password)
 	{
-		if (Type.size() == 0)return;
+		if (Type.size() == 0)return false;
 		int length = Password.size();
+		char password[LEN_USER_PASSWORD];
+		memset(password, 0, sizeof(password));
 		memset(IUser->Password, 0, sizeof(Password));
 		for (int i = 0; i < length; i++)
 		{
+			password[i] = IUser->Password[i];
 			IUser->Password[i] = Password[i];
 		}
 		Datastore::InsertOrUpdate(IUser);
+		auto user = Datastore::Select<Datastore::User>([](const Datastore::User* user) {
+			return strcmp(user->Name, IUser->Name);
+		});
+		if (user->Password == Password)return true;
+		else
+		{
+			strcpy(IUser->Password, password);
+			return false;
+		}
 	}
 	//用户修改INFO
-	void UpdataOnesInfo(string Info)
+	bool UpdataOnesInfo(string Info)
 	{
-		if (Type.size() == 0)return;
+		if (Type.size() == 0)return false;
 		int length = Info.size();
+		char info[LEN_USER_INFO];
+		memset(info, 0, sizeof(info));
 		memset(IUser->Info, 0, sizeof(Info));
 		for (int i = 0; i < length; i++)
 		{
+			info[i] = IUser->Info[i];
 			IUser->Info[i] = Info[i];
 		}
 		Datastore::InsertOrUpdate(IUser);
+		auto user = Datastore::Select<Datastore::User>([](const Datastore::User* user) {
+			return strcmp(user->Info, IUser->Info);
+		});
+		if (user->Password == Info)return true;
+		else
+		{
+			strcpy(IUser->Info, info);
+			return false;
+		}
 	}
 
 
@@ -90,28 +114,58 @@ namespace UserManager
 	//管理员
 	//所有操作在管理员未登入的情况下无法进行
 	//搜索返回NULL
+
 	//创建新用户
-	void InsertUser(string Name, string Password)
+	bool InsertUser(string Name, string Password)
 	{
-		if (Type != "管理员")return;
-		auto user = Datastore::Create<Datastore::User>();
-		char name[LEN_USER_NAME];
-		char password[LEN_USER_PASSWORD];
-		char type[LEN_USER_TYPE]="用户";
-		char info[LEN_USER_INFO];
-		memset(name,0,sizeof(name));
-		memset(password,0,sizeof(password));
-		memset(info,0,sizeof(info));
-		for (int i = 0; Name[i] != 0; i++){ name[i] = Name[i]; }
-		for (int i = 0; Password[i] != 0; i++){ password[i] = Password[i]; }
-		strcpy(user->Name, name);
-		strcpy(user->Password, password);
-		strcpy(user->Info, info);
-		strcpy(user->Type, type);
-		user->IsDeleted = false;
-		Datastore::InsertOrUpdate(user);
-		delete user;
-		user=NULL;
+		if (Type != "管理员")return false;
+		auto TemporaryUser = Datastore::Select<Datastore::User>([Name](const Datastore::User* user){
+			return user->Name==Name;
+		});
+		if (TemporaryUser != NULL)
+		{
+			delete TemporaryUser;
+			TemporaryUser = NULL;
+			return false;
+		}
+		else
+		{
+			auto user = Datastore::Create<Datastore::User>();
+			char name[LEN_USER_NAME];
+			char password[LEN_USER_PASSWORD];
+			char type[LEN_USER_TYPE] = "用户";
+			char info[LEN_USER_INFO];
+			memset(name, 0, sizeof(name));
+			memset(password, 0, sizeof(password));
+			memset(info, 0, sizeof(info));
+			for (int i = 0; Name[i] != 0; i++){ name[i] = Name[i]; }
+			for (int i = 0; Password[i] != 0; i++){ password[i] = Password[i]; }
+			strcpy(user->Name, name);
+			strcpy(user->Password, password);
+			strcpy(user->Info, info);
+			strcpy(user->Type, type);
+			user->IsDeleted = false;
+			Datastore::InsertOrUpdate(user);
+			delete user;
+			user = NULL;
+			delete TemporaryUser;
+			TemporaryUser = NULL;
+			TemporaryUser = Datastore::Select<Datastore::User>([Name](const Datastore::User* user){
+				return user->Name == Name;
+			});
+			if (TemporaryUser != NULL)
+			{ 
+				delete TemporaryUser;
+				TemporaryUser = NULL;
+				return true;
+			}
+			else
+			{
+				delete TemporaryUser;
+				TemporaryUser = NULL;
+				return false; 
+			}
+		}
 	}
 	//选择用户
 	Datastore::User * SelectUser(string Name)
@@ -123,46 +177,96 @@ namespace UserManager
 		return user;
 	}
 	//删除用户
-	void DeleteUser(string Name)
+	bool DeleteUser(string Name)
 	{
-		if (Type != "管理员")return;
+		if (Type != "管理员")return false;
 		auto user = Datastore::Select<Datastore::User>([Name](const Datastore::User* user) {
 			return user->Name == Name;
 		});
-		if (user == NULL)return;
+		if (user == NULL)return false;
 		Datastore::Delete<Datastore::User>(user->Index);
 		delete user;
+		user = NULL;
+		user = Datastore::Select<Datastore::User>([Name](const Datastore::User* user) {
+			return user->Name == Name;
+		});
+		if (user == NULL)
+		{
+			delete user;
+			user = NULL;
+			return true;
+		}
+		else
+		{
+			delete user;
+			user = NULL;
+			return false;
+		}
 	}
 	//更新用户密码
-	void UpdataUserPassword(string Name, string Password)
+	bool UpdataUserPassword(string Name, string Password)
 	{
-		if (Type != "管理员")return;
-		if (Password == "")return;
-		else {
+		if (Type != "管理员")return false;
+		if (Password == "")return false;
+		else 
+		{
 			auto user = Datastore::Select<Datastore::User>([Name](const Datastore::User* user) {
 				return user->Name == Name;
 			});
-			if (user == NULL)return;
+			if (user == NULL)return false;
 			memset(user->Password, 0, sizeof(Password));
 			strcpy(user->Password, &Password[0]);
 			Datastore::InsertOrUpdate(user);
 			delete user;
+			user = NULL;
+		}
+		auto user = Datastore::Select<Datastore::User>([Name](const Datastore::User* user) {
+			return user->Name == Name;
+		});
+		if (user->Password == Password)
+		{
+			delete user;
+			user = NULL;
+			return true;
+		}
+		else
+		{
+			delete user;
+			user = NULL;
+			return false;
 		}
 	}
 	//更新用户INFO
-	void UpdataUserInfo(string Name, string Info)
+	bool UpdataUserInfo(string Name, string Info)
 	{
-		if (Type != "管理员")return;
-		if (Info == "")return;
-		else {
+		if (Type != "管理员")return false;
+		if (Info == "")return false;
+		else 
+		{
 			auto user = Datastore::Select<Datastore::User>([Name](const Datastore::User* user) {
 				return user->Name == Name;
 			});
-			if (user == NULL)return;
+			if (user == NULL)return false;
 			memset(user->Info, 0, sizeof(Info));
 			strcpy(user->Info, &Info[0]);
 			Datastore::InsertOrUpdate(user);
 			delete user;
+			user = NULL;
+		}
+		auto user = Datastore::Select<Datastore::User>([Name](const Datastore::User* user) {
+			return user->Name == Name;
+		});
+		if (user->Password == Info)
+		{
+			delete user;
+			user = NULL;
+			return true;
+		}
+		else
+		{
+			delete user;
+			user = NULL;
+			return false;
 		}
 	}
 }
