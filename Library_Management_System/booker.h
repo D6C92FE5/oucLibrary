@@ -1,15 +1,11 @@
 // BOOKER_H
-#ifndef _BOOKER_H
-#define _BOOKER_H
-
+#pragma once
 #include <iostream>
-#include <algorithm>
-#include <string.h>
-#include <string>
 #include <cstdio>
+#include <string>
+#include <cstring>
 #include <cstdlib>
 #include <ctime>
-#include <cmath>
 
 #include "datastore.h"
 
@@ -75,5 +71,4 @@ namespace Booker{
 	//Account²éÕÒ¼ÇÂ¼
 	Datastore::Record** AccountFindRecord(string Account);
 }
-
-#endif  //BOOK_H
+//BOOK_H

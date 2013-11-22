@@ -26,8 +26,8 @@ namespace UserManager
 			return user->Name == Name;
 		});
 		if (user == NULL) return false;
-		bool flag = (bool)strcmp(user->Password, password);
-		if (!flag){
+		bool flag = strcmp(user->Password, password) == 0;
+		if (flag){
 			Type = user->Type;
 			IUser->Index = user->Index;
 			IUser->IsDeleted = user->IsDeleted;
@@ -75,7 +75,7 @@ namespace UserManager
 		}
 		Datastore::InsertOrUpdate(IUser);
 		auto user = Datastore::Select<Datastore::User>([](const Datastore::User* user) {
-			return strcmp(user->Name, IUser->Name);
+			return strcmp(user->Name, IUser->Name) != 0;
 		});
 		if (user->Password == Password)return true;
 		else
