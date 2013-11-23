@@ -554,7 +554,7 @@ void deleteBook(){
 	if(Booker::DeleteBook(isbn, num)){
 		printLine("删除成功！");
 	}else{
-		printLine("删除失败！");
+		printLine("删除失败，请检查要删除的数量是否超过目前在馆数量！");
 	}
 }
 
