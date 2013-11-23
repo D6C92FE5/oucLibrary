@@ -157,11 +157,21 @@ namespace Booker{
 	bool DeleteBook(string Isbn, int Num)
 	{
 		Temp = Isbn;
-		Datastore::Book **book = Datastore::Selects<Datastore::Book>(SearchBookCondition);
+		auto book = Datastore::Selects<Datastore::Book>(SearchBookCondition);
 
-		if (book[0] != NULL && book[0]->Remain >= Num)
+		if (book[0] != NULL && book[0]->Remain == Num)
 		{
+			book[0]->Remain = 0;
+			Datastore::InsertOrUpdate(book[0]);
 			Datastore::Delete<Datastore::Book>(book[0]->Index);
+			delete[] book;
+			book = NULL;
+			return true;
+		}
+		else if (book[0] != NULL && book[0]->Remain >= Num)
+		{
+			book[0]->Remain -= Num;
+			Datastore::InsertOrUpdate(book[0]);
 			delete[] book;
 			book = NULL;
 			return true;
