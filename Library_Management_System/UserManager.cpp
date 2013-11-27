@@ -75,7 +75,7 @@ namespace UserManager
 		}
 		Datastore::InsertOrUpdate(IUser);
 		auto user = Datastore::Select<Datastore::User>([](const Datastore::User* user) {
-			return strcmp(user->Name, IUser->Name) != 0;
+			return strcmp(user->Name, IUser->Name) == 0;
 		});
 		if (user->Password == Password)return true;
 		else
@@ -99,9 +99,9 @@ namespace UserManager
 		}
 		Datastore::InsertOrUpdate(IUser);
 		auto user = Datastore::Select<Datastore::User>([](const Datastore::User* user) {
-			return strcmp(user->Info, IUser->Info) != 0;
+			return strcmp(user->Name, IUser->Name) == 0;
 		});
-		if (user->Password == Info)return true;
+		if (user->Info == Info)return true;
 		else
 		{
 			strcpy(IUser->Info, info);
@@ -170,7 +170,6 @@ namespace UserManager
 	//选择用户
 	Datastore::User * SelectUser(string Name)
 	{
-		if (Type != "管理员")return NULL;
 		auto user = Datastore::Select<Datastore::User>([Name](const Datastore::User* user) {
 			return user->Name == Name;
 		});
