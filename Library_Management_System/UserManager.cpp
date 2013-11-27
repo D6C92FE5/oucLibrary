@@ -81,6 +81,7 @@ namespace UserManager
 		else
 		{
 			strcpy(IUser->Password, password);
+			Datastore::InsertOrUpdate(IUser);
 			return false;
 		}
 	}
@@ -105,6 +106,7 @@ namespace UserManager
 		else
 		{
 			strcpy(IUser->Info, info);
+			Datastore::InsertOrUpdate(IUser);
 			return false;
 		}
 	}
