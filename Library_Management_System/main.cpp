@@ -391,6 +391,7 @@ void userInfoChangeMenu(){
 	case 1:
 	case 2:
 		if(isAdmin){
+			print("请输入用户名：");
 			userName = getInputString(LEN_USER_NAME);
 		}else if(isUser){
 			userName = IUser->Name;
