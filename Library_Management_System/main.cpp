@@ -226,7 +226,7 @@ bool isbnCheck(string str){
 		}
 	}else if(allNumric(str.c_str()) || (allNumric(str.substr(0,str.size() - 2).c_str()) && 
 		('X' == str.at(str.size() - 1) ||  'x' == str.at(str.size() - 1)))){
-		return true;
+			return true;
 	}
 	return false;
 }
@@ -416,7 +416,11 @@ void userInfoChangeMenu(){
 			}else {
 				newInfo = getInputString(LEN_USER_INFO);
 			}
-			changFunc[choice](newInfo);
+			if(changFunc[choice](newInfo)){
+				printLine("修改成功！");
+			}else{
+				printLine("修改失败！");
+			}
 			name = IUser->Name;
 			user = UserManager::SelectUser(name);
 			cout << "用户名：" << user->Name << " 用户类型：" << user->Type << " INFO：" << user->Info << endl;
@@ -519,8 +523,9 @@ void bookInfoChangeMenu(){
 		cout << "请输入新的" << bookInfoItems[choice] << ":";
 		if(0 == maxLength){
 			newInfo = getInputIsbn();
+		}else{
+			newInfo = getInputString(maxLength);
 		}
-		newInfo = getInputString(maxLength);
 		if(changeFunc[choice](bookIsbn, newInfo)){
 			printLine("修改成功！");
 			book = Booker::IsbnFindBook(bookIsbn);
