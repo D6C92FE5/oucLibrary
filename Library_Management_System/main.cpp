@@ -572,7 +572,7 @@ void deleteUser(){
 	if(strcmp(name.c_str(), "") == 0){
 		return;
 	}
-	if(UserManager::SelectUser(name) != NULL){
+	if(UserManager::SelectUser(name) == NULL){
 		printLine("用户不存在！");
 		return;
 	}
