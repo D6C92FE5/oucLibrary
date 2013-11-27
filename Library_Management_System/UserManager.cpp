@@ -208,7 +208,6 @@ namespace UserManager
 	bool UpdataUserPassword(string Name, string Password)
 	{
 		if (Type != "管理员")return false;
-		if (Password == "")return false;
 		else 
 		{
 			auto user = Datastore::Select<Datastore::User>([Name](const Datastore::User* user) {
@@ -241,7 +240,6 @@ namespace UserManager
 	bool UpdataUserInfo(string Name, string Info)
 	{
 		if (Type != "管理员")return false;
-		if (Info == "")return false;
 		else 
 		{
 			auto user = Datastore::Select<Datastore::User>([Name](const Datastore::User* user) {
