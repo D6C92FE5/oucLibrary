@@ -400,23 +400,22 @@ void userInfoChangeMenu(){
 			break;
 		}
 		cout << "请输入新" << userInfoItems[choice] << "：";
-		if(isUser){
-			if(choice == 1){
-				newInfo = getInputString(LEN_USER_PASSWORD);
-				printLine("再次输入新密码：");
-				newInfo2 = getInputString(LEN_USER_PASSWORD);
-				if(strcmp(newInfo.c_str(), newInfo2.c_str()) != 0){
-					printLine("两次密码不一致，修改失败！");
-					if(isAdmin){
-						menuTag = 3;
-					}else {
-						menuTag = 2;
-					}
-					return;
+		if(choice == 1){
+			newInfo = getInputString(LEN_USER_PASSWORD);
+			print("再次输入新密码：");
+			newInfo2 = getInputString(LEN_USER_PASSWORD);
+			if(strcmp(newInfo.c_str(), newInfo2.c_str()) != 0){
+				printLine("两次密码不一致，修改失败！");
+				if(isAdmin){
+					menuTag = 3;
+				}else {
+					menuTag = 2;
 				}
-			}else {
-				newInfo = getInputString(LEN_USER_INFO);
+				return;
 			}
+		}
+		if(isUser){
+			newInfo = getInputString(LEN_USER_INFO);
 			if(changFunc[choice](newInfo)){
 				printLine("修改成功！");
 			}else{
@@ -426,9 +425,7 @@ void userInfoChangeMenu(){
 			user = UserManager::SelectUser(name);
 			cout << "用户名：" << user->Name << " 用户类型：" << user->Type << " INFO：" << user->Info << endl;
 		}else if(isAdmin){
-			if(choice == 1){
-				newInfo = getInputPassword();
-			}else {
+			if(choice!=1){
 				newInfo = getInputString(LEN_USER_INFO);
 			}
 			changFunc2[choice](userName, newInfo);
@@ -437,7 +434,6 @@ void userInfoChangeMenu(){
 			cout << "用户名：" << user->Name << " 用户类型：" << user->Type << " INFO：" << user->Info << endl;
 			delete user;
 		}
-
 		break;
 	case 0:
 		if(isAdmin){
