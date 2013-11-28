@@ -61,7 +61,7 @@ void printUserMenu(){
 	printLine("---------菜单---------");
 	printLine("1.检索书目");
 	printLine("2.修改个人信息");
-	printLine("3.权限提升（管理员）");
+	printLine("3.切换用户");
 	printLine("4.查看借阅记录");
 	printLine("0.注销");
 	printLine("----------------------");
@@ -299,7 +299,7 @@ void searchBooks(){
 
 //不可逆操作确认
 bool confirm(){
-	int n = 4;
+	int n = 3;
 	bool isSure = true;
 	while(n-- && isSure){
 		printLine("该操作不可逆，确定吗？");
