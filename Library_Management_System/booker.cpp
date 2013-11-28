@@ -182,7 +182,7 @@ namespace Booker{
 		Datastore::Book **newbook = Datastore::Selects<Datastore::Book>(SearchBookCondition);
 		if (book[0] != NULL && newbook[0] == NULL)
 		{
-			strcpy(book[0]->Isbn, &Isbn[0]);
+			strcpy(book[0]->Isbn, &NewIsbn[0]);
 			Datastore::InsertOrUpdate(book[0]);
 			delete[] book;
 			book = NULL;
