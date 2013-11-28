@@ -299,7 +299,7 @@ void searchBooks(){
 
 //不可逆操作确认
 bool confirm(){
-	int n = 3;
+	int n = 2;
 	bool isSure = true;
 	while(n-- && isSure){
 		printLine("该操作不可逆，确定吗？");
