@@ -423,7 +423,12 @@ void userInfoChangeMenu(){
 			}
 			name = IUser->Name;
 			user = UserManager::SelectUser(name);
-			cout << "用户名：" << user->Name << " 用户类型：" << user->Type << " INFO：" << user->Info << endl;
+			if (user == NULL){
+				printLine("找不到该用户！");
+			}
+			else{
+				cout << "用户名：" << user->Name << " 用户类型：" << user->Type << " INFO：" << user->Info << endl;
+			}
 		}else if(isAdmin){
 			if(choice!=1){
 				newInfo = getInputString(LEN_USER_INFO);
@@ -431,7 +436,12 @@ void userInfoChangeMenu(){
 			changFunc2[choice](userName, newInfo);
 			name = userName;
 			user = UserManager::SelectUser(name);
-			cout << "用户名：" << user->Name << " 用户类型：" << user->Type << " INFO：" << user->Info << endl;
+			if (user == NULL){
+				printLine("找不到该用户！");
+			}
+			else{
+				cout << "用户名：" << user->Name << " 用户类型：" << user->Type << " INFO：" << user->Info << endl;
+			}
 			delete user;
 		}
 		break;
@@ -662,7 +672,12 @@ void searchUser(){
 		return;
 	}
 	user = UserManager::SelectUser(name);
-	cout << "用户名：" << user->Name << " 用户类型：" << user->Type << " INFO：" << user->Info << endl;
+	if(user == NULL){
+		printLine("找不到该用户！");
+	}
+	else{
+		cout << "用户名：" << user->Name << " 用户类型：" << user->Type << " INFO：" << user->Info << endl;
+	}
 }
 
 //借书
